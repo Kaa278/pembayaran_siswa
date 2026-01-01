@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayEdu - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Pay<span>Edu</span></h1>
+                </a>
+
+                <div class="user-menu">
+                   <a href="login.html" class="btn btn-primary">Masuk</a>
+
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Beranda</a></li>
+            <li><a href="login.html"><i class="fas fa-sign-in-alt"></i> Masuk</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h2>Sistem Pembayaran Siswa Digital</h2>
+            <p>Platform pembayaran sekolah yang aman, cepat, dan terintegrasi. Kelola pembayaran SPP, uang gedung, dan biaya lainnya dengan mudah dalam satu sistem.</p>
+            <a href="login.html" class="btn btn-warning btn-lg">Mulai Sekarang</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Fitur Unggulan</h2>
+                <p>Semua yang Anda butuhkan untuk pembayaran sekolah yang lebih baik</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Keamanan Terjamin</h3>
+                    <p>Sistem keamanan berlapis untuk melindungi data dan transaksi keuangan Anda.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Pembayaran Cepat</h3>
+                    <p>Proses pembayaran yang cepat dan real-time tanpa antrian dan birokrasi rumit.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Laporan Lengkap</h3>
+                    <p>Dapatkan laporan keuangan lengkap dan bisa di-export ke PDF atau Excel.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Akses Mobile</h3>
+                    <p>Akses sistem kapan saja dan di mana saja melalui perangkat mobile Anda.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>Cara Kerja Sistem</h2>
+                <p>Hanya dalam 4 langkah mudah</p>
+            </div>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Login</h3>
+                    <p>Masuk ke sistem dengan akun siswa Anda</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Cek Tagihan</h3>
+                    <p>Lihat daftar tagihan yang harus dibayar</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Bayar</h3>
+                    <p>Lakukan pembayaran melalui metode yang tersedia</p>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Verifikasi</h3>
+                    <p>Tunggu verifikasi dari admin sekolah</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Apa Kata Mereka</h2>
+                <p>Testimoni dari pengguna sistem kami</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Sangat memudahkan orang tua untuk membayar SPP tanpa harus datang ke sekolah."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <h4>Siti Rahayu</h4>
+                            <p>Orang Tua Siswa</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-content">
+                        <p>"Sistem yang responsif dan mudah digunakan. Laporannya juga lengkap."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-info">
+                            <h4>Budi Santoso</h4>
+                            <p>Siswa Kelas XII</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pay<span>Edu</span></h3>
+                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="login.html">Masuk</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Kami</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

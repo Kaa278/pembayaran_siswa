@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bayar Tagihan - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Pay<span>Edu</span></h1>
+                </a>
+
+                <!-- Navigation for logged in users -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+                        <li><a href="bayar.html" class="active"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="usernameDisplay">Ahmad Fauzi</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+            <li><a href="bayar.html" class="active"><i class="fas fa-credit-card"></i> Bayar</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Bayar Tagihan</h2>
+                <p>Lakukan pembayaran dan upload bukti pembayaran</p>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Form Pembayaran</h3>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="selectBill">Pilih Tagihan yang akan dibayar</label>
+                        <select id="selectBill">
+                            <option value="">-- Pilih Tagihan --</option>
+                            <option value="spp_mei">SPP Mei 2024 - Rp 350.000 (Jatuh tempo: 10 Mei 2024)</option>
+                            <option value="praktikum">Uang Praktikum - Rp 150.000 (Jatuh tempo: 20 Mei 2024)</option>
+                            <option value="gedung">Uang Gedung - Rp 500.000 (Jatuh tempo: 15 April 2024)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Pilih Metode Pembayaran</label>
+                        <div class="payment-methods">
+                            <div class="payment-method active" data-method="transfer">
+                                <i class="fas fa-university"></i>
+                                <p>Transfer Bank</p>
+                            </div>
+                            <div class="payment-method" data-method="virtual_account">
+                                <i class="fas fa-credit-card"></i>
+                                <p>Virtual Account</p>
+                            </div>
+                            <div class="payment-method" data-method="ewallet">
+                                <i class="fas fa-wallet"></i>
+                                <p>E-Wallet</p>
+                            </div>
+                            <div class="payment-method" data-method="cash">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <p>Tunai</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Bank Transfer Details -->
+                    <div class="bank-details" id="bankDetails">
+                        <h4>Informasi Transfer</h4>
+                        <div class="bank-info">
+                            <div class="bank-item">
+                                <span>Bank:</span>
+                                <strong>BCA (Bank Central Asia)</strong>
+                            </div>
+                            <div class="bank-item">
+                                <span>No. Rekening:</span>
+                                <strong>1234567890</strong>
+                            </div>
+                            <div class="bank-item">
+                                <span>Atas Nama:</span>
+                                <strong>SMP/SMA XYZ</strong>
+                            </div>
+                            <div class="bank-item">
+                                <span>Kode Unik:</span>
+                                <strong class="text-primary">001</strong> (3 digit terakhir NIS Anda)
+                            </div>
+                        </div>
+                        <p class="note"><strong>Catatan:</strong> Harap transfer sesuai dengan jumlah tagihan + kode unik</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentProof">Upload Bukti Pembayaran</label>
+                        <div class="file-upload">
+                            <input type="file" id="paymentProof" accept="image/*,.pdf" hidden>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Klik untuk upload atau drag file ke sini</p>
+                                <small>Format: JPG, PNG, PDF (maks. 2MB)</small>
+                            </div>
+                            <div class="file-preview" id="filePreview"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentNote">Catatan (Opsional)</label>
+                        <textarea id="paymentNote" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="paymentDate">Tanggal Pembayaran</label>
+                        <input type="date" id="paymentDate" value="">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button class="btn btn-primary btn-lg" id="submitPayment">
+                            <i class="fas fa-paper-plane"></i> Kirim Pembayaran
+                        </button>
+                        <a href="tagihan.html" class="btn btn-outline">Batal</a>
+                    </div>
+                </div>
+                
+                <!-- Payment Information -->
+                <div class="card mt-20">
+                    <div class="card-header">
+                        <h3>Informasi Rekening Sekolah</h3>
+                    </div>
+                    <div class="bank-list">
+                        <div class="bank-card">
+                            <i class="fas fa-university"></i>
+                            <div>
+                                <h4>Bank BCA</h4>
+                                <p>No. Rekening: 1234567890</p>
+                                <p>Atas Nama: SMP/SMA XYZ</p>
+                            </div>
+                        </div>
+                        <div class="bank-card">
+                            <i class="fas fa-university"></i>
+                            <div>
+                                <h4>Bank Mandiri</h4>
+                                <p>No. Rekening: 0987654321</p>
+                                <p>Atas Nama: SMP/SMA XYZ</p>
+                            </div>
+                        </div>
+                        <div class="bank-card">
+                            <i class="fas fa-university"></i>
+                            <div>
+                                <h4>Bank BRI</h4>
+                                <p>No. Rekening: 1122334455</p>
+                                <p>Atas Nama: SMP/SMA XYZ</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="payment-instructions">
+                        <h4>Instruksi Pembayaran:</h4>
+                        <ol>
+                            <li>Pilih tagihan yang akan dibayar</li>
+                            <li>Transfer ke rekening sekolah sesuai jumlah tagihan + kode unik</li>
+                            <li>Upload bukti transfer di form di atas</li>
+                            <li>Tunggu verifikasi dari admin (1-2 hari kerja)</li>
+                            <li>Cek status pembayaran di halaman Tagihan atau Riwayat</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pay<span>Edu</span></h3>
+                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="riwayat.html">Riwayat</a></li>
+                        <li><a href="bayar.html">Bayar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Kami</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/bayar.js"></script>
+</body>
+</html>

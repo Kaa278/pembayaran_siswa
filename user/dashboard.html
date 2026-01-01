@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Dhik<span>Put</span></h1>
+                </a>
+
+                <!-- Navigation for logged in users -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+                        <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="usernameDisplay">Ahmad Fauzi</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+            <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Dashboard Siswa</h2>
+                <p>Selamat datang, <span id="dashboardUsername">Ahmad Fauzi</span> | Kelas: XII IPA 2 | NIS: 2023001</p>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Total Tagihan</h4>
+                        <p>Rp 1.250.000</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Lunas</h4>
+                        <p>8 Tagihan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon secondary">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Menunggu Verifikasi</h4>
+                        <p>1 Tagihan</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Belum Dibayar</h4>
+                        <p>2 Tagihan</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Bills -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Tagihan Terbaru</h3>
+                    <a href="tagihan.html" class="btn btn-outline">Lihat Semua</a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Jenis Pembayaran</th>
+                                <th>Jatuh Tempo</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentBills">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payment Info -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Informasi Pembayaran</h3>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <h4>Jadwal Pembayaran</h4>
+                            <p>SPP dibayar setiap tanggal 1-10 setiap bulan</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-university"></i>
+                        <div>
+                            <h4>Rekening Sekolah</h4>
+                            <p>BCA: 1234567890 a/n Jomok</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div>
+                            <h4>Keterlambatan</h4>
+                            <p>Dikenakan denda 1% per hari setelah jatuh tempo</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Dhik<span>Put</span></h3>
+                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="riwayat.html">Riwayat</a></li>
+                        <li><a href="bayar.html">Bayar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Kami</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 DhikPut - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/dashboard.js"></script>
+</body>
+</html>

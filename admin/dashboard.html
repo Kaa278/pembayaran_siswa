@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in admin">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Pay<span>Edu</span> Admin</h1>
+                </a>
+
+                <!-- Navigation for admin -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="../user/tagihan.html"><i class="fas fa-users"></i> Siswa</a></li>
+                        <li><a href="#"><i class="fas fa-cog"></i> Pengaturan</a></li>
+                        <li><a href="#"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-tie"></i>
+                        <span id="usernameDisplay">Admin</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu Admin</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="../user/tagihan.html"><i class="fas fa-users"></i> Siswa</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Pengaturan</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Dashboard Admin</h2>
+                <p>Selamat datang, <span id="dashboardUsername">Administrator</span></p>
+            </div>
+            
+            <!-- Admin Stats Cards -->
+            <div class="stats-cards">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Total Siswa</h4>
+                        <p>850</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Pemasukan Hari Ini</h4>
+                        <p>Rp 5.250.000</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Menunggu Verifikasi</h4>
+                        <p>12 Pembayaran</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon secondary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h4>Pemasukan Bulan Ini</h4>
+                        <p>Rp 125.000.000</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card mb-20">
+                <div class="card-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                <div class="quick-actions">
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Verifikasi Pembayaran</span>
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Tambah Siswa</span>
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Buat Tagihan</span>
+                    </a>
+                    <a href="#" class="action-btn">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Generate Laporan</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Recent Payments -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Pembayaran Terbaru</h3>
+                    <a href="#" class="btn btn-outline">Lihat Semua</a>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nama Siswa</th>
+                                <th>Jenis Pembayaran</th>
+                                <th>Tanggal</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Ahmad Fauzi</td>
+                                <td>SPP April 2024</td>
+                                <td>5 April 2024</td>
+                                <td>Rp 350.000</td>
+                                <td><span class="status success">Lunas</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">Detail</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Budi Santoso</td>
+                                <td>Uang Gedung</td>
+                                <td>12 April 2024</td>
+                                <td>Rp 500.000</td>
+                                <td><span class="status warning">Menunggu</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">Verifikasi</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Siti Rahayu</td>
+                                <td>SPP Mei 2024</td>
+                                <td>1 Mei 2024</td>
+                                <td>Rp 350.000</td>
+                                <td><span class="status warning">Menunggu</span></td>
+                                <td>
+                                    <button class="btn btn-primary btn-sm">Verifikasi</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Dewi Anggraini</td>
+                                <td>Uang Praktikum</td>
+                                <td>28 April 2024</td>
+                                <td>Rp 150.000</td>
+                                <td><span class="status success">Lunas</span></td>
+                                <td>
+                                    <button class="btn btn-outline btn-sm">Detail</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- System Info -->
+            <div class="card mt-20">
+                <div class="card-header">
+                    <h3>Informasi Sistem</h3>
+                </div>
+                <div class="system-info">
+                    <div class="info-item">
+                        <i class="fas fa-database"></i>
+                        <div>
+                            <h4>Total Transaksi</h4>
+                            <p>1,250 Transaksi</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <div>
+                            <h4>Periode Aktif</h4>
+                            <p>Tahun Ajaran 2023/2024</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-money-check-alt"></i>
+                        <div>
+                            <h4>Total Pemasukan</h4>
+                            <p>Rp 1.2 Miliar</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pay<span>Edu</span> Admin</h3>
+                    <p>Sistem administrasi pembayaran sekolah yang terintegrasi.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Menu Admin</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="../user/tagihan.html">Kelola Siswa</a></li>
+                        <li><a href="#">Pengaturan</a></li>
+                        <li><a href="#">Laporan</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Teknis</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678 ext. 2</li>
+                        <li><i class="fas fa-envelope"></i> admin@payedu.sch.id</li>
+                        <li><i class="fas fa-headset"></i> Support: 08:00 - 17:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Hak akses terbatas untuk admin.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+</html>

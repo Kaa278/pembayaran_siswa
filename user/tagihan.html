@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tagihan - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Pay<span>Edu</span></h1>
+                </a>
+
+                <!-- Navigation for logged in users -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+                        <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-circle"></i>
+                        <span id="usernameDisplay">Ahmad Fauzi</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+            <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Tagihan Saya</h2>
+                <p>Daftar lengkap tagihan yang harus dibayar</p>
+            </div>
+            
+            <!-- Filter Section -->
+            <div class="card mb-20">
+                <div class="filter-section">
+                    <h4>Filter Tagihan</h4>
+                    <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus">
+                                <option value="">Semua Status</option>
+                                <option value="lunas">Lunas</option>
+                                <option value="pending">Menunggu Verifikasi</option>
+                                <option value="unpaid">Belum Dibayar</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMonth">Bulan</label>
+                            <select id="filterMonth">
+                                <option value="">Semua Bulan</option>
+                                <option value="1">Januari</option>
+                                <option value="2">Februari</option>
+                                <option value="3">Maret</option>
+                                <option value="4">April</option>
+                                <option value="5">Mei</option>
+                                <option value="6">Juni</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterYear">Tahun</label>
+                            <select id="filterYear">
+                                <option value="">Semua Tahun</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="applyFilter">Terapkan Filter</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Bills Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Daftar Tagihan</h3>
+                    <div>
+                        <button class="btn btn-primary" id="refreshBills">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-success" id="printBills">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Jenis Pembayaran</th>
+                                <th>Bulan/Tahun</th>
+                                <th>Jatuh Tempo</th>
+                                <th>Jumlah</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allBillsTable">
+                            <!-- Data akan diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Summary -->
+                <div class="table-summary">
+                    <div class="summary-item">
+                        <span>Total Tagihan:</span>
+                        <strong>Rp 1.250.000</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Sudah Dibayar:</span>
+                        <strong>Rp 900.000</strong>
+                    </div>
+                    <div class="summary-item">
+                        <span>Sisa Tagihan:</span>
+                        <strong class="text-danger">Rp 350.000</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Dhik<span>Put</span></h3>
+                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="riwayat.html">Riwayat</a></li>
+                        <li><a href="bayar.html">Bayar</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Kami</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 DhikPut - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/tagihan.js"></script>
+</body>
+</html>

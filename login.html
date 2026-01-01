@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <!-- Header (Sama dengan index.html) -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Pay<span>Edu</span></h1>
+                </a>
+
+                <div class="user-menu">
+                    <a href="index.html" class="btn btn-outline">
+                        <i class="fas fa-arrow-left"></i> Kembali ke Beranda
+                    </a>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fas fa-home"></i> Beranda</a></li>
+            <li><a href="login.html" class="active"><i class="fas fa-sign-in-alt"></i> Masuk</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <h2>Masuk ke Sistem</h2>
+                        <p>Silakan pilih peran dan masukkan kredensial Anda</p>
+                    </div>
+                    
+                    <div class="role-selector">
+                        <div class="role-option active" data-role="siswa">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Siswa</span>
+                        </div>
+                        <div class="role-option" data-role="admin">
+                            <i class="fas fa-user-tie"></i>
+                            <span>Admin</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="username">Username/NIS</label>
+                        <input type="text" id="username" placeholder="Masukkan username atau NIS">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Masukkan password">
+                    </div>
+                    
+                    <div class="form-group form-check">
+                        <input type="checkbox" id="rememberMe">
+                        <label for="rememberMe">Ingat saya</label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button class="btn btn-primary btn-block" id="submitLogin">Masuk</button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p>Lupa password? <a href="#" id="forgotPassword">Klik di sini</a></p>
+                    </div>
+                    
+                    <div class="login-footer">
+                        <p>Belum punya akun? Hubungi admin sekolah untuk pendaftaran.</p>
+                    </div>
+                </div>
+                
+                <div class="login-info">
+                    <h3>Informasi Login</h3>
+                    <div class="info-box">
+                        <h4><i class="fas fa-user-graduate"></i> Login sebagai Siswa:</h4>
+                        <p>Username: <strong>siswa</strong> atau <strong>2023001</strong></p>
+                        <p>Password: <strong>siswa123</strong></p>
+                    </div>
+                    <div class="info-box">
+                        <h4><i class="fas fa-user-tie"></i> Login sebagai Admin:</h4>
+                        <p>Username: <strong>admin</strong> atau <strong>admin001</strong></p>
+                        <p>Password: <strong>admin123</strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="assets/js/auth.js"></script>
+</body>
+</html>
