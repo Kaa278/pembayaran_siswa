@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Siswa - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Dhik<span>Put</span></h1>
+                </a>
+
+                <!-- Navigation -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+                        <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                        <li><a href="profil.html" class="active"><i class="fas fa-user"></i> Profil</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-toggle">
+                            <i class="fas fa-user-circle profile-icon"></i>
+                            <span class="profile-name">Profil</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="dropdownMenu">
+                            <div class="profile-dropdown-header">
+                                <h4>Ahmad Fauzi</h4>
+                                <p>XII IPA 2 | NIS: 2023001</p>
+                            </div>
+                            <a href="profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-user"></i> Lihat Profil
+                            </a>
+                            <a href="ubah_profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-edit"></i> Edit Profil
+                            </a>
+                            <a href="ubah_password.html" class="profile-dropdown-item">
+                                <i class="fas fa-key"></i> Ubah Password
+                            </a>
+                            <div class="profile-dropdown-divider"></div>
+                            <button class="profile-dropdown-item" id="logoutBtn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="profile-info">
+            <h4>Ahmad Fauzi</h4>
+            <p>XII IPA 2 | NIS: 2023001</p>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+            <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+            <li><a href="profil.html" class="active"><i class="fas fa-user"></i> Profil</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="profile-container">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div>
+                        <h1 class="student-name">Ahmad Fauzi</h1>
+                        <p class="student-detail">XII IPA 2 | NIS: 2023001</p>
+                    </div>
+                    <div class="profile-actions">
+                        <a href="ubah_profil.html" class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
+                        <a href="ubah_password.html" class="btn btn-outline">
+                            <i class="fas fa-key"></i> Ubah Password
+                        </a>
+                    </div>
+                </div>
+
+               <!-- Personal Information -->
+<div class="info-card">
+    <div class="section-title">
+        <i class="fas fa-user-circle"></i> Informasi Pribadi
+    </div>
+
+    <div class="info-grid-modern">
+        <div class="info-box">
+            <i class="fas fa-id-card info-icon"></i>
+            <div>
+                <span class="info-label">NIS / NISN</span>
+                <strong>2023001 / 004123456789</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-calendar-alt info-icon"></i>
+            <div>
+                <span class="info-label">Tanggal Lahir</span>
+                <strong>15 Agustus 2006</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-venus-mars info-icon"></i>
+            <div>
+                <span class="info-label">Jenis Kelamin</span>
+                <strong>Laki-laki</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-map-marker-alt info-icon"></i>
+            <div>
+                <span class="info-label">Tempat Lahir</span>
+                <strong>Jakarta</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-phone info-icon"></i>
+            <div>
+                <span class="info-label">Nomor Telepon</span>
+                <strong>0812-3456-7890</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-envelope info-icon"></i>
+            <div>
+                <span class="info-label">Email</span>
+                <strong>ahmad.fauzi@dhikput.sch.id</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-map info-icon"></i>
+            <div>
+                <span class="info-label">Alamat</span>
+                <strong>Jl. Merdeka No. 123, Jakarta Pusat</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-heart info-icon"></i>
+            <div>
+                <span class="info-label">Agama</span>
+                <strong>Islam</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-school info-icon"></i>
+            <div>
+                <span class="info-label">Kelas</span>
+                <strong>XII IPA 2</strong>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-calendar info-icon"></i>
+            <div>
+                <span class="info-label">Tahun Ajaran</span>
+                <strong>2023/2024</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+                <!-- Family Information -->
+                <div class="info-card">
+                    <div class="family-section">
+                        <div class="section-title">
+                            <i class="fas fa-users"></i> Informasi Keluarga
+                        </div>
+                        
+                        <div class="family-grid">
+                            <div class="family-card">
+                                <div class="family-role">AYAH</div>
+                                <div class="family-name">Drs. Bambang Sudiro</div>
+                                <div class="family-contact">
+                                    <i class="fas fa-briefcase"></i> 
+                                    <span>Pegawai Negeri</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-phone"></i> 
+                                    <span>0813-1234-5678</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-envelope"></i> 
+                                    <span>bambang@email.com</span>
+                                </div>
+                            </div>
+                            
+                            <div class="family-card">
+                                <div class="family-role">IBU</div>
+                                <div class="family-name">Siti Aisyah, S.Pd</div>
+                                <div class="family-contact">
+                                    <i class="fas fa-briefcase"></i> 
+                                    <span>Guru SMP</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-phone"></i> 
+                                    <span>0812-8765-4321</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-envelope"></i> 
+                                    <span>siti.aisyah@email.com</span>
+                                </div>
+                            </div>
+                            
+                            <div class="family-card">
+                                <div class="family-role">WALI</div>
+                                <div class="family-name">H. Ahmad Rifai</div>
+                                <div class="family-contact">
+                                    <i class="fas fa-briefcase"></i> 
+                                    <span>Wiraswasta</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-phone"></i> 
+                                    <span>0811-2233-4455</span>
+                                </div>
+                                <div class="family-contact">
+                                    <i class="fas fa-map-marker-alt"></i> 
+                                    <span>Jl. Sejahtera No. 45, Jakarta</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Dhik<span>Put</span></h3>
+                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Link Cepat</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="riwayat.html">Riwayat</a></li>
+                        <li><a href="bayar.html">Bayar</a></li>
+                        <li><a href="profil.html">Profil</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Kami</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
+                        <li><i class="fas fa-envelope"></i> info@dhikput.sch.id</li>
+                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 DhikPut - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+</html>

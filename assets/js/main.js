@@ -200,3 +200,56 @@ function updateUserDisplay() {
         });
     }
 }
+/* ============================
+   PROFILE PAGE FUNCTIONALITY
+   ============================ */
+
+function initProfilePage() {
+    // Initialize profile dropdown
+    const profileDropdown = document.getElementById('profileDropdown');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    
+    if (profileDropdown && dropdownMenu) {
+        // Toggle dropdown
+        profileDropdown.addEventListener('click', function(e) {
+            dropdownMenu.classList.toggle('show');
+            e.stopPropagation();
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            dropdownMenu.classList.remove('show');
+        });
+        
+        // Prevent dropdown from closing when clicking inside
+        dropdownMenu.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    }
+    
+    // Initialize logout functionality
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutMobileBtn = document.getElementById('logoutMobileBtn');
+    
+    function handleLogout() {
+        if (confirm('Apakah Anda yakin ingin keluar?')) {
+            window.location.href = '../../index.html';
+        }
+    }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+    
+    if (logoutMobileBtn) {
+        logoutMobileBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleLogout();
+        });
+    }
+}
+
+// Call initProfilePage when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    initProfilePage();
+});

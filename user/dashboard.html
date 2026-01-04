@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+      
+    </style>
 </head>
 <body class="logged-in">
     <!-- Header -->
@@ -25,16 +28,38 @@
                         <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
                         <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
                         <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                        <li><a href="profil.html"><i class="fas fa-user"></i> Profil</a></li>
                     </ul>
                 </nav>
 
-                <!-- User menu -->
+                <!-- User menu dengan dropdown profil -->
                 <div class="user-menu">
-                    <div class="user-info">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="usernameDisplay">Ahmad Fauzi</span>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-toggle">
+                            <i class="fas fa-user-circle profile-icon"></i>
+                            <span class="profile-name">Profil</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="dropdownMenu">
+                            <div class="profile-dropdown-header">
+                                <h4>Ahmad Fauzi</h4>
+                                <p>XII IPA 2 | NIS: 2023001</p>
+                            </div>
+                            <a href="profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-user"></i> Lihat Profil
+                            </a>
+                            <a href="edit-profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-edit"></i> Edit Profil
+                            </a>
+                            <a href="ubah-password.html" class="profile-dropdown-item">
+                                <i class="fas fa-key"></i> Ubah Password
+                            </a>
+                            <div class="profile-dropdown-divider"></div>
+                            <button class="profile-dropdown-item" id="logoutBtn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+                        </div>
                     </div>
-                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
                 </div>
 
                 <div class="hamburger" id="hamburger">
@@ -54,11 +79,19 @@
                 <i class="fas fa-times"></i>
             </button>
         </div>
+        
+        <!-- Info profil di mobile sidebar -->
+        <div class="profile-info">
+            <h4>Ahmad Fauzi</h4>
+            <p>XII IPA 2 | NIS: 2023001</p>
+        </div>
+        
         <ul class="sidebar-menu">
             <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
             <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
             <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
             <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+            <li><a href="profil.html"><i class="fas fa-user"></i> Profil</a></li>
             <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
         </ul>
     </div>
@@ -132,6 +165,34 @@
                         </thead>
                         <tbody id="recentBills">
                             <!-- Data akan diisi oleh JavaScript -->
+                            <tr>
+                                <td>SPP April 2024</td>
+                                <td>10 April 2024</td>
+                                <td>Rp 350.000</td>
+                                <td><span class="status-badge status-success">Lunas</span></td>
+                                <td><button class="btn-action">Lihat</button></td>
+                            </tr>
+                            <tr>
+                                <td>Uang Seragam</td>
+                                <td>15 April 2024</td>
+                                <td>Rp 500.000</td>
+                                <td><span class="status-badge status-warning">Menunggu Verifikasi</span></td>
+                                <td><button class="btn-action">Upload Bukti</button></td>
+                            </tr>
+                            <tr>
+                                <td>SPP Mei 2024</td>
+                                <td>10 Mei 2024</td>
+                                <td>Rp 350.000</td>
+                                <td><span class="status-badge status-danger">Belum Dibayar</span></td>
+                                <td><button class="btn-action">Bayar</button></td>
+                            </tr>
+                            <tr>
+                                <td>Uang Praktikum</td>
+                                <td>20 Mei 2024</td>
+                                <td>Rp 150.000</td>
+                                <td><span class="status-badge status-danger">Belum Dibayar</span></td>
+                                <td><button class="btn-action">Bayar</button></td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -154,7 +215,7 @@
                         <i class="fas fa-university"></i>
                         <div>
                             <h4>Rekening Sekolah</h4>
-                            <p>BCA: 1234567890 a/n Jomok</p>
+                            <p>BCA: 1234567890 a/n DhikPut School</p>
                         </div>
                     </div>
                     <div class="info-item">
@@ -169,49 +230,30 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Dhik<span>Put</span></h3>
-                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Link Cepat</h4>
-                    <ul class="footer-links">
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="tagihan.html">Tagihan</a></li>
-                        <li><a href="riwayat.html">Riwayat</a></li>
-                        <li><a href="bayar.html">Bayar</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Kontak Kami</h4>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
-                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
-                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
-                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 DhikPut - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
-            </div>
-        </div>
-    </footer>
+
 
     <script src="../../assets/js/main.js"></script>
     <script src="../../assets/js/dashboard.js"></script>
+    <script>
+        // Script untuk dropdown profil
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            
+            // Logout function
+            function handleLogout() {
+                if (confirm('Apakah Anda yakin ingin keluar?')) {
+                    // Simulasi logout - redirect ke halaman login
+                    window.location.href = '../../index.html';
+                }
+            }
+            
+            // Tambahkan event listener untuk tombol logout
+            document.getElementById('logoutBtn').addEventListener('click', handleLogout);
+            document.getElementById('logoutMobileBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                handleLogout();
+            });
+        });
+    </script>
 </body>
 </html>

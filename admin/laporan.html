@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Keuangan - Admin Dhikput</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in admin">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Admin</h1>
+                </a>
+
+                <!-- Navigation for admin -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+                        <li><a href="laporan.html" class="active"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-tie"></i>
+                        <span id="usernameDisplay">Administrator</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Laporan Keuangan</h2>
+                <p>Generate laporan transaksi dan keuangan</p>
+            </div>
+
+            <!-- Report Options -->
+            <div class="card mb-20">
+                <div class="report-options">
+                    <h4>Pilih Jenis Laporan</h4>
+                    <div class="report-types">
+                        <div class="report-type active" data-type="harian">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>Harian</span>
+                        </div>
+                        <div class="report-type" data-type="bulanan">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Bulanan</span>
+                        </div>
+                        <div class="report-type" data-type="tahunan">
+                            <i class="fas fa-calendar"></i>
+                            <span>Tahunan</span>
+                        </div>
+                        <div class="report-type" data-type="custom">
+                            <i class="fas fa-cog"></i>
+                            <span>Custom</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Date Selection -->
+                    <div class="date-selection">
+                        <div class="form-group">
+                            <label for="startDate">Dari Tanggal</label>
+                            <input type="date" id="startDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">Sampai Tanggal</label>
+                            <input type="date" id="endDate">
+                        </div>
+                        <button class="btn btn-primary" id="generateReport">
+                            <i class="fas fa-chart-bar"></i> Generate Laporan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Preview -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Preview Laporan</h3>
+                    <div class="export-options">
+                        <button class="btn btn-success" id="exportPDF">
+                            <i class="fas fa-file-pdf"></i> Export PDF
+                        </button>
+                        <button class="btn btn-success" id="exportExcel">
+                            <i class="fas fa-file-excel"></i> Export Excel
+                        </button>
+                        <button class="btn btn-primary" id="printReport">
+                            <i class="fas fa-print"></i> Cetak
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Report Summary -->
+                <div class="report-summary">
+                    <div class="summary-card">
+                        <h4>Total Pemasukan</h4>
+                        <p class="amount">Rp 125.000.000</p>
+                        <small>Bulan Mei 2024</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Total Transaksi</h4>
+                        <p class="amount">350</p>
+                        <small>Transaksi sukses</small>
+                    </div>
+                    <div class="summary-card">
+                        <h4>Rata-rata per Transaksi</h4>
+                        <p class="amount">Rp 357.143</p>
+                        <small>Per siswa</small>
+                    </div>
+                </div>
+                
+                <!-- Report Charts -->
+                <div class="report-charts">
+                    <div class="chart-container">
+                        <h4>Statistik Pembayaran Per Jenis</h4>
+                        <div class="chart-placeholder">
+                            <!-- Placeholder untuk chart -->
+                            <p>Chart akan muncul di sini setelah generate</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Detailed Table -->
+                <div class="table-responsive mt-20">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Jenis Pembayaran</th>
+                                <th>Jumlah Transaksi</th>
+                                <th>Total Pemasukan</th>
+                                <th>Siswa Aktif</th>
+                                <th>Siswa Belum Bayar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data laporan -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/admin_laporan.js"></script>
+</body>
+</html>

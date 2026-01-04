@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profil - Sistem Pembayaran Siswa</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        /* CSS Tambahan Khusus Form */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #334155;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: 0.3s;
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4a6cf7;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+
+        /* Input yang tidak boleh diedit (Readonly) */
+        .form-control[readonly] {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn-action-group {
+            margin-top: 30px;
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .btn-action-group { flex-direction: column-reverse; }
+            .btn-action-group button, .btn-action-group a { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body class="logged-in">
+<header>
+    <div class="container">
+        <div class="header-content">
+            <a href="../../index.html" class="logo">
+                <i class="fas fa-graduation-cap"></i>
+                <h1>Dhik<span>Put</span></h1>
+            </a>
+
+            <nav class="nav-desktop">
+                <ul>
+                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                    <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+                    <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                    <li><a href="profil.html" class="active"><i class="fas fa-user"></i> Profil</a></li>
+                </ul>
+            </nav>
+
+            <div class="user-menu">
+                <div class="profile-dropdown" id="profileDropdown">
+                    <div class="profile-dropdown-toggle">
+                        <i class="fas fa-user-circle profile-icon"></i>
+                        <span class="profile-name">Profil</span>
+                        <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                    </div>
+                    <div class="profile-dropdown-menu" id="dropdownMenu">
+                        <div class="profile-dropdown-header">
+                            <h4>Ahmad Fauzi</h4>
+                            <p>XII IPA 2 | NIS: 2023001</p>
+                        </div>
+                        <a href="profil.html" class="profile-dropdown-item">
+                            <i class="fas fa-user"></i> Lihat Profil
+                        </a>
+                        <a href="edit-profil.html" class="profile-dropdown-item">
+                            <i class="fas fa-edit"></i> Edit Profil
+                        </a>
+                        <a href="ubah-password.html" class="profile-dropdown-item">
+                            <i class="fas fa-key"></i> Ubah Password
+                        </a>
+                        <div class="profile-dropdown-divider"></div>
+                        <button class="profile-dropdown-item" id="logoutBtn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                            <i class="fas fa-sign-out-alt"></i> Keluar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="mobile-sidebar" id="mobileSidebar">
+    <div class="mobile-sidebar-header">
+        <h3>Menu</h3>
+        <button class="close-sidebar" id="closeSidebar">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    
+    <div class="profile-info">
+        <h4>Ahmad Fauzi</h4>
+        <p>XII IPA 2 | NIS: 2023001</p>
+    </div>
+    
+    <ul class="sidebar-menu">
+        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+        <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
+        <li><a href="bayar.html"><i class="fas fa-credit-card"></i> Bayar</a></li>
+        <li><a href="profil.html" class="active"><i class="fas fa-user"></i> Profil</a></li>
+        <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+    </ul>
+</div>
+<div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <div style="margin-bottom: 20px;">
+                <a href="profil.html" style="color: #64748b; text-decoration: none; font-size: 14px;">
+                    <i class="fas fa-arrow-left"></i> Kembali ke Profil
+                </a>
+                <h2 style="margin-top: 10px; color: #1e293b;">Edit Profil</h2>
+            </div>
+
+            <div class="form-card">
+                <form action="profil.html"> <div class="section-title" style="margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                        <i class="fas fa-id-badge" style="color: #4a6cf7;"></i> Data Utama
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control" value="Ahmad Fauzi" readonly>
+                            <small style="color: #ef4444; font-size: 11px;">*Hubungi Admin TU untuk ubah nama</small>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NIS / NISN</label>
+                            <input type="text" class="form-control" value="2023001" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Kelas</label>
+                            <input type="text" class="form-control" value="XII IPA 2" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Jenis Kelamin</label>
+                            <input type="text" class="form-control" value="Laki-laki" readonly>
+                        </div>
+                    </div>
+
+                    <div class="section-title" style="margin: 30px 0 20px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+                        <i class="fas fa-address-book" style="color: #4a6cf7;"></i> Kontak & Alamat
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Nomor Telepon (WhatsApp)</label>
+                            <input type="tel" class="form-control" value="0812-3456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-control" value="ahmad.fauzi@dhikput.sch.id">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Alamat Lengkap</label>
+                            <textarea class="form-control" rows="3">Jl. Merdeka No. 123, Jakarta Pusat</textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-action-group">
+                        <a href="profil.html" class="btn btn-outline" style="border: 1px solid #cbd5e1; color: #64748b; padding: 12px 25px; border-radius: 10px; text-decoration: none;">Batal</a>
+                        <button type="submit" class="btn btn-primary" onclick="alert('Data berhasil disimpan!')">
+                            <i class="fas fa-save"></i> Simpan Perubahan
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="../../assets/js/main.js"></script>
+</body>
+</html>

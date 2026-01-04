@@ -3,38 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bayar Tagihan - Sistem Pembayaran Siswa</title>
+    <title>Bayar - Sistem Pembayaran Siswa</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --primary-light: #eef2ff;
+            --text-dark: #1e293b;
+            --text-gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+        }
+
+        body {
+            background-color: #f8fafc;
+        }
+
+        /* Layout Grid */
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 30px;
+            align-items: start;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .payment-grid { grid-template-columns: 1fr; }
+        }
+
+        /* --- Left Column: Bill List --- */
+        .bill-card-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bill-item {
+            background: white;
+            padding: 20px 25px;
+            border-radius: 16px;
+            border: 1px solid transparent;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bill-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        /* Selected State */
+        .bill-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .bill-item.selected::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 6px;
+            background: var(--primary);
+        }
+
+        .bill-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .bill-title {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 16px;
+        }
+
+        .bill-price {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .bill-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .check-icon {
+            display: none;
+            color: var(--primary);
+            background: white;
+            border-radius: 50%;
+            padding: 2px;
+        }
+        
+        .bill-item.selected .check-icon { display: inline-block; }
+
+        /* --- Right Column: Payment Panel (Sticky) --- */
+        .payment-panel {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 20px;
+        }
+
+        .panel-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Custom Tab Switcher */
+        .payment-tabs {
+            display: flex;
+            background: #f1f5f9;
+            padding: 5px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-weight: 600;
+        }
+
+        /* Compact Bank List */
+        .bank-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bank-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            transition: 0.2s;
+        }
+
+        .bank-row:hover { border-color: var(--primary); }
+
+        .bank-logo {
+            width: 50px;
+            font-weight: 700;
+            font-size: 12px;
+            color: #555;
+            background: #f1f5f9;
+            padding: 5px;
+            text-align: center;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .bank-details { flex: 1; }
+        .bank-details p { margin: 0; font-size: 14px; font-weight: 600; color: var(--text-dark); }
+        .bank-details small { font-size: 11px; color: var(--text-gray); }
+
+        .btn-copy {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Upload Area */
+        .upload-mini {
+            border: 2px dashed #cbd5e1;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .upload-mini:hover { border-color: var(--primary); background: var(--primary-light); }
+        .upload-mini i { font-size: 24px; color: var(--text-gray); margin-bottom: 5px; }
+        .upload-mini p { font-size: 12px; color: var(--text-gray); margin: 0; }
+
+
+        .step-item {
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+        .step-item:last-child { border-bottom: none; margin-bottom: 0; }
+
+        /* Summary Section */
+        .summary-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #e2e8f0;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .total-label { font-size: 14px; color: var(--text-gray); }
+        .total-value { font-size: 24px; font-weight: 700; color: var(--primary); }
+
+        .btn-pay {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #4a6cf7 0%, #3255e0 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(74, 108, 247, 0.4);
+            transition: 0.3s;
+        }
+
+        .btn-pay:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(74, 108, 247, 0.5); }
+        
+        /* Utility */
+        .hide { display: none; }
+        .badge { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;}
+        .badge-danger { background: #fee2e2; color: #ef4444; }
+        .badge-warning { background: #fef3c7; color: #f59e0b; }
+    </style>
 </head>
 <body class="logged-in">
-    <!-- Header -->
     <header>
         <div class="container">
             <div class="header-content">
                 <a href="../../index.html" class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                    <h1>Pay<span>Edu</span></h1>
+                    <h1>Dhik<span>Put</span></h1>
                 </a>
-
-                <!-- Navigation for logged in users -->
                 <nav class="nav-desktop">
                     <ul>
                         <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                         <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
                         <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
                         <li><a href="bayar.html" class="active"><i class="fas fa-credit-card"></i> Bayar</a></li>
+                        <li><a href="profil.html"><i class="fas fa-user"></i> Profil</a></li>
                     </ul>
                 </nav>
-
                 <!-- User menu -->
                 <div class="user-menu">
-                    <div class="user-info">
-                        <i class="fas fa-user-circle"></i>
-                        <span id="usernameDisplay">Ahmad Fauzi</span>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-toggle">
+                            <i class="fas fa-user-circle profile-icon"></i>
+                            <span class="profile-name">Profil</span>
+                            <i class="fas fa-chevron-down" style="margin-left: 5px; font-size: 12px;"></i>
+                        </div>
+                        <div class="profile-dropdown-menu" id="dropdownMenu">
+                            <div class="profile-dropdown-header">
+                                <h4>Ahmad Fauzi</h4>
+                                <p>XII IPA 2 | NIS: 2023001</p>
+                            </div>
+                            <a href="profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-user"></i> Lihat Profil
+                            </a>
+                            <a href="edit-profil.html" class="profile-dropdown-item">
+                                <i class="fas fa-edit"></i> Edit Profil
+                            </a>
+                            <a href="ubah-password.html" class="profile-dropdown-item">
+                                <i class="fas fa-key"></i> Ubah Password
+                            </a>
+                            <div class="profile-dropdown-divider"></div>
+                            <button class="profile-dropdown-item" id="logoutBtn" style="width: 100%; text-align: left; background: none; border: none; cursor: pointer;">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+                        </div>
                     </div>
-                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
                 </div>
 
                 <div class="hamburger" id="hamburger">
@@ -46,215 +319,238 @@
         </div>
     </header>
 
-    <!-- Mobile Sidebar -->
-    <div class="mobile-sidebar" id="mobileSidebar">
-        <div class="mobile-sidebar-header">
-            <h3>Menu</h3>
-            <button class="close-sidebar" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
-            <li><a href="riwayat.html"><i class="fas fa-history"></i> Riwayat</a></li>
-            <li><a href="bayar.html" class="active"><i class="fas fa-credit-card"></i> Bayar</a></li>
-            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
-        </ul>
-    </div>
-    <div class="overlay" id="overlay"></div>
-
-    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <div class="page-header">
-                <h2>Bayar Tagihan</h2>
-                <p>Lakukan pembayaran dan upload bukti pembayaran</p>
+            <div class="page-header" style="margin-bottom: 10px;">
+                <h2>Pembayaran</h2>
+                <p>Pilih tagihan dan selesaikan pembayaran.</p>
             </div>
-            
-            <!-- Payment Form -->
-            <div class="payment-form">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Form Pembayaran</h3>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="selectBill">Pilih Tagihan yang akan dibayar</label>
-                        <select id="selectBill">
-                            <option value="">-- Pilih Tagihan --</option>
-                            <option value="spp_mei">SPP Mei 2024 - Rp 350.000 (Jatuh tempo: 10 Mei 2024)</option>
-                            <option value="praktikum">Uang Praktikum - Rp 150.000 (Jatuh tempo: 20 Mei 2024)</option>
-                            <option value="gedung">Uang Gedung - Rp 500.000 (Jatuh tempo: 15 April 2024)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Pilih Metode Pembayaran</label>
-                        <div class="payment-methods">
-                            <div class="payment-method active" data-method="transfer">
-                                <i class="fas fa-university"></i>
-                                <p>Transfer Bank</p>
-                            </div>
-                            <div class="payment-method" data-method="virtual_account">
-                                <i class="fas fa-credit-card"></i>
-                                <p>Virtual Account</p>
-                            </div>
-                            <div class="payment-method" data-method="ewallet">
-                                <i class="fas fa-wallet"></i>
-                                <p>E-Wallet</p>
-                            </div>
-                            <div class="payment-method" data-method="cash">
-                                <i class="fas fa-money-bill-wave"></i>
-                                <p>Tunai</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bank Transfer Details -->
-                    <div class="bank-details" id="bankDetails">
-                        <h4>Informasi Transfer</h4>
-                        <div class="bank-info">
-                            <div class="bank-item">
-                                <span>Bank:</span>
-                                <strong>BCA (Bank Central Asia)</strong>
-                            </div>
-                            <div class="bank-item">
-                                <span>No. Rekening:</span>
-                                <strong>1234567890</strong>
-                            </div>
-                            <div class="bank-item">
-                                <span>Atas Nama:</span>
-                                <strong>SMP/SMA XYZ</strong>
-                            </div>
-                            <div class="bank-item">
-                                <span>Kode Unik:</span>
-                                <strong class="text-primary">001</strong> (3 digit terakhir NIS Anda)
-                            </div>
-                        </div>
-                        <p class="note"><strong>Catatan:</strong> Harap transfer sesuai dengan jumlah tagihan + kode unik</p>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="paymentProof">Upload Bukti Pembayaran</label>
-                        <div class="file-upload">
-                            <input type="file" id="paymentProof" accept="image/*,.pdf" hidden>
-                            <div class="upload-area" id="uploadArea">
-                                <i class="fas fa-cloud-upload-alt"></i>
-                                <p>Klik untuk upload atau drag file ke sini</p>
-                                <small>Format: JPG, PNG, PDF (maks. 2MB)</small>
-                            </div>
-                            <div class="file-preview" id="filePreview"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="paymentNote">Catatan (Opsional)</label>
-                        <textarea id="paymentNote" rows="3" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="paymentDate">Tanggal Pembayaran</label>
-                        <input type="date" id="paymentDate" value="">
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button class="btn btn-primary btn-lg" id="submitPayment">
-                            <i class="fas fa-paper-plane"></i> Kirim Pembayaran
-                        </button>
-                        <a href="tagihan.html" class="btn btn-outline">Batal</a>
-                    </div>
-                </div>
+
+            <div class="payment-grid">
                 
-                <!-- Payment Information -->
-                <div class="card mt-20">
-                    <div class="card-header">
-                        <h3>Informasi Rekening Sekolah</h3>
-                    </div>
-                    <div class="bank-list">
-                        <div class="bank-card">
-                            <i class="fas fa-university"></i>
-                            <div>
-                                <h4>Bank BCA</h4>
-                                <p>No. Rekening: 1234567890</p>
-                                <p>Atas Nama: SMP/SMA XYZ</p>
+                <div class="bill-section">
+                    <h4 style="margin-bottom: 15px; font-weight: 600; color: #333;">1. Pilih Tagihan</h4>
+                    <div class="bill-card-container">
+                        
+                        <div class="bill-item selected" onclick="toggleBill(this)">
+                            <div class="bill-header">
+                                <span class="bill-title">SPP Mei 2024</span>
+                                <i class="fas fa-check-circle check-icon"></i>
+                            </div>
+                            <div class="bill-header">
+                                <span class="bill-price" data-amount="350000">Rp 350.000</span>
+                                <span class="badge badge-danger">Belum Dibayar</span>
+                            </div>
+                            <div class="bill-meta">
+                                <span><i class="far fa-calendar-alt"></i> Tempo: 10 Mei 2024</span>
                             </div>
                         </div>
-                        <div class="bank-card">
-                            <i class="fas fa-university"></i>
-                            <div>
-                                <h4>Bank Mandiri</h4>
-                                <p>No. Rekening: 0987654321</p>
-                                <p>Atas Nama: SMP/SMA XYZ</p>
+
+                        <div class="bill-item" onclick="toggleBill(this)">
+                            <div class="bill-header">
+                                <span class="bill-title">Uang Praktikum</span>
+                                <i class="fas fa-check-circle check-icon"></i>
+                            </div>
+                            <div class="bill-header">
+                                <span class="bill-price" data-amount="150000">Rp 150.000</span>
+                                <span class="badge badge-danger">Belum Dibayar</span>
+                            </div>
+                            <div class="bill-meta">
+                                <span><i class="far fa-calendar-alt"></i> Tempo: 20 Mei 2024</span>
                             </div>
                         </div>
-                        <div class="bank-card">
-                            <i class="fas fa-university"></i>
-                            <div>
-                                <h4>Bank BRI</h4>
-                                <p>No. Rekening: 1122334455</p>
-                                <p>Atas Nama: SMP/SMA XYZ</p>
+
+                        <div class="bill-item" onclick="toggleBill(this)">
+                            <div class="bill-header">
+                                <span class="bill-title">Uang Seragam</span>
+                                <i class="fas fa-check-circle check-icon"></i>
+                            </div>
+                            <div class="bill-header">
+                                <span class="bill-price" data-amount="500000">Rp 500.000</span>
+                                <span class="badge badge-warning">Verifikasi</span>
+                            </div>
+                            <div class="bill-meta">
+                                <span><i class="far fa-calendar-alt"></i> Tempo: 15 Apr 2024</span>
                             </div>
                         </div>
-                    </div>
-                    <div class="payment-instructions">
-                        <h4>Instruksi Pembayaran:</h4>
-                        <ol>
-                            <li>Pilih tagihan yang akan dibayar</li>
-                            <li>Transfer ke rekening sekolah sesuai jumlah tagihan + kode unik</li>
-                            <li>Upload bukti transfer di form di atas</li>
-                            <li>Tunggu verifikasi dari admin (1-2 hari kerja)</li>
-                            <li>Cek status pembayaran di halaman Tagihan atau Riwayat</li>
-                        </ol>
+
                     </div>
                 </div>
+
+                <div class="pay-section">
+                    <div class="payment-panel">
+                        <div class="panel-header">
+                            <i class="fas fa-wallet" style="color: var(--primary)"></i> Metode Bayar
+                        </div>
+
+                        <div class="payment-tabs">
+                            <button class="tab-btn active" onclick="switchMethod('transfer', this)">
+                                <i class="fas fa-mobile-alt"></i> Transfer
+                            </button>
+                            <button class="tab-btn" onclick="switchMethod('cash', this)">
+                                <i class="fas fa-store"></i> Cash (TU)
+                            </button>
+                        </div>
+
+                        <div id="method-transfer">
+                            <div class="bank-list">
+                                <div class="bank-row">
+                                    <div class="bank-logo">BCA</div>
+                                    <div class="bank-details">
+                                        <p id="rek-bca">1234567890</p>
+                                        <small>DhikPut School</small>
+                                    </div>
+                                    <button class="btn-copy" onclick="copyText('rek-bca')"><i class="far fa-copy"></i></button>
+                                </div>
+                                <div class="bank-row">
+                                    <div class="bank-logo">BRI</div>
+                                    <div class="bank-details">
+                                        <p id="rek-bri">9876543210</p>
+                                        <small>DhikPut School</small>
+                                    </div>
+                                    <button class="btn-copy" onclick="copyText('rek-bri')"><i class="far fa-copy"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="upload-mini" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p><strong>Upload Bukti Transfer</strong></p>
+                                <small style="color: #94a3b8;">Klik atau drop file di sini</small>
+                                <input type="file" id="fileInput" hidden>
+                                <div id="fileName" style="margin-top:5px; font-size:12px; color:var(--primary); font-weight:600;"></div>
+                            </div>
+                        </div>
+
+                        <div id="method-cash" class="hide">
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <i class="fas fa-store" style="font-size: 32px; color: #4a6cf7; margin-bottom: 5px;"></i>
+                                <h5 style="margin: 0; font-weight: 600;">Instruksi Tunai</h5>
+                            </div>
+
+                            <div class="scroll-box">
+                                <div class="step-item">
+                                    <strong>1. Kunjungi Loket TU</strong><br>
+                                    <small style="color:#64748b">Gedung A, Lantai 1 (08:00 - 14:00 WIB).</small>
+                                </div>
+                                <div class="step-item">
+                                    <strong>2. Ambil Antrean</strong><br>
+                                    <small style="color:#64748b">Ambil nomor antrean khusus keuangan.</small>
+                                </div>
+                                <div class="step-item">
+                                    <strong>3. Sebutkan NIS</strong><br>
+                                    <small style="color:#64748b">Sebutkan NIS kepada petugas loket.</small>
+                                </div>
+                                <div class="step-item">
+                                    <strong>4. Bayar & Simpan Bukti</strong><br>
+                                    <small style="color:#64748b">Pastikan dapat kuitansi cap basah.</small>
+                                </div>
+                                <div class="step-item">
+                                    <strong>5. Selesai</strong><br>
+                                    <small style="color:#64748b">Status update otomatis dalam 24 jam.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="summary-box">
+                            <div class="total-row">
+                                <span class="total-label">Total Bayar</span>
+                                <span class="total-value" id="totalDisplay">Rp 350.000</span>
+                            </div>
+                            <button class="btn-pay" id="payBtn">
+                                Konfirmasi Pembayaran
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Pay<span>Edu</span></h3>
-                    <p>Sistem pembayaran sekolah yang aman, cepat, dan terintegrasi untuk memudahkan administrasi keuangan pendidikan.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Link Cepat</h4>
-                    <ul class="footer-links">
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="tagihan.html">Tagihan</a></li>
-                        <li><a href="riwayat.html">Riwayat</a></li>
-                        <li><a href="bayar.html">Bayar</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Kontak Kami</h4>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> Jl. Pendidikan No. 123, Jakarta</li>
-                        <li><i class="fas fa-phone"></i> (021) 1234-5678</li>
-                        <li><i class="fas fa-envelope"></i> info@payedu.sch.id</li>
-                        <li><i class="fas fa-clock"></i> Senin - Jumat: 08:00 - 16:00</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Semua hak dilindungi.</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="../../assets/js/main.js"></script>
-    <script src="../../assets/js/bayar.js"></script>
+    <script>
+        // --- 1. Logika Pilih Tagihan ---
+        function toggleBill(element) {
+            element.classList.toggle('selected');
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+            let total = 0;
+            const selectedItems = document.querySelectorAll('.bill-item.selected');
+            
+            selectedItems.forEach(item => {
+                const price = parseInt(item.querySelector('.bill-price').getAttribute('data-amount'));
+                total += price;
+            });
+            
+            document.getElementById('totalDisplay').innerText = 'Rp ' + total.toLocaleString('id-ID');
+        }
+
+        // --- 2. Ganti Metode (Transfer / Cash) ---
+        function switchMethod(method, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            if(method === 'transfer') {
+                document.getElementById('method-transfer').classList.remove('hide');
+                document.getElementById('method-cash').classList.add('hide');
+            } else {
+                document.getElementById('method-transfer').classList.add('hide');
+                document.getElementById('method-cash').classList.remove('hide');
+            }
+        }
+
+        // --- 3. Copy Rekening ---
+        function copyText(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            navigator.clipboard.writeText(text);
+            alert('Nomor rekening disalin: ' + text);
+        }
+
+        // --- 4. Upload File ---
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', function() {
+            if(this.files && this.files[0]) {
+                document.getElementById('fileName').innerText = "File: " + this.files[0].name;
+                uploadArea.style.borderColor = "#4a6cf7";
+                uploadArea.style.background = "#eef2ff";
+            }
+        });
+
+        // --- 5. LOGIKA TOMBOL BAYAR & REDIRECT ---
+        document.getElementById('payBtn').addEventListener('click', () => {
+            // Cek apakah ada tagihan yang dipilih
+            const selectedBills = document.querySelectorAll('.bill-item.selected');
+            if (selectedBills.length === 0) {
+                alert('Silakan pilih minimal satu tagihan untuk dibayar.');
+                return;
+            }
+
+            const total = document.getElementById('totalDisplay').innerText;
+            
+            // Konfirmasi Pembayaran
+            if (confirm(`Apakah Anda yakin ingin melakukan pembayaran sebesar ${total}?`)) {
+                // Simulasi proses loading (opsional)
+                // alert('Permintaan pembayaran Anda sedang diproses...');
+                
+                // Redirect ke halaman Konfirmasi Bayar
+                window.location.href = 'konfirmasi_bayar.html';
+            }
+        });
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            if(confirm('Keluar dari aplikasi?')) window.location.href = '../../index.html';
+        });
+
+        // Init
+        calculateTotal();
+    </script>
 </body>
 </html>

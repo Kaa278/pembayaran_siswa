@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Pembayaran - Admin Dhikput</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+        <style>
+    body {
+        overflow-y: scroll;
+    }
+</style>
+</head>
+<body class="logged-in admin">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                                       <h1>Admin</h1>
+
+                </a>
+
+                <!-- Navigation for admin -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="pembayaran.html" class="active"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+                        <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-tie"></i>
+                        <span id="usernameDisplay">Administrator</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Verifikasi Pembayaran</h2>
+                <p>Verifikasi bukti pembayaran dari siswa</p>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="card mb-20">
+                <div class="filter-section">
+                    <h4>Filter Pembayaran</h4>
+                    <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus">
+                                <option value="pending" selected>Menunggu Verifikasi</option>
+                                <option value="verified">Terverifikasi</option>
+                                <option value="rejected">Ditolak</option>
+                                <option value="all">Semua Status</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterDate">Tanggal</label>
+                            <input type="date" id="filterDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterJenis">Jenis Pembayaran</label>
+                            <select id="filterJenis">
+                                <option value="">Semua Jenis</option>
+                                <option value="SPP">SPP</option>
+                                <option value="Uang Gedung">Uang Gedung</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" id="applyFilter">Terapkan</button>
+                        <button class="btn btn-outline" id="resetFilter">Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payments Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Daftar Pembayaran</h3>
+                    <div class="table-summary">
+                        <span>Total: <strong>12</strong> pembayaran</span>
+                        <span>Menunggu: <strong class="text-warning">8</strong></span>
+                        <span>Lunas: <strong class="text-success">4</strong></span>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Siswa</th>
+                                <th>Jenis</th>
+                                <th>Jumlah</th>
+                                <th>Tanggal Bayar</th>
+                                <th>Metode</th>
+                                <th>Bukti</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="paymentsTable">
+                            <!-- Data akan diisi -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Bulk Actions -->
+                <div class="bulk-actions">
+                    <select id="bulkAction">
+                        <option value="">Pilih Aksi</option>
+                        <option value="verify">Verifikasi Selected</option>
+                        <option value="reject">Tolak Selected</option>
+                    </select>
+                    <button class="btn btn-primary" id="applyBulkAction">Terapkan</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Detail Pembayaran -->
+    <div class="modal" id="paymentDetailModal">
+        <!-- Modal content untuk detail pembayaran -->
+    </div>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/admin_pembayaran.js"></script>
+</body>
+</html>

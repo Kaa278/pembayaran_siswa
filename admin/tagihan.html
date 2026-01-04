@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Tagihan - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in admin">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                                        <h1>Admin</h1>
+
+                </a>
+
+                <!-- Navigation for admin -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+                        <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+                        <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-tie"></i>
+                        <span id="usernameDisplay">Administrator</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu Admin</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+            <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+            <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Manajemen Tagihan</h2>
+                <p>Buat, edit, dan kelola tagihan siswa</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="tagihan">Tagihan</button>
+                <button class="tab-btn" data-tab="jenis">Jenis Pembayaran</button>
+                <button class="tab-btn" data-tab="template">Template Tagihan</button>
+            </div>
+
+            <!-- Tab Content: Tagihan -->
+            <div class="tab-content active" id="tagihanTab">
+                <!-- Toolbar -->
+                <div class="card mb-20">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <input type="text" id="searchBills" placeholder="Cari tagihan...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <div class="toolbar-actions">
+                            <button class="btn btn-primary" id="createBillBtn">
+                                <i class="fas fa-plus-circle"></i> Buat Tagihan
+                            </button>
+                            <button class="btn btn-success" id="exportBills">
+                                <i class="fas fa-file-excel"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Filter -->
+                    <div class="filter-section">
+                        <div class="filter-controls">
+                            <div class="form-group">
+                                <label for="filterJenis">Jenis Tagihan</label>
+                                <select id="filterJenis">
+                                    <option value="">Semua Jenis</option>
+                                    <option value="SPP">SPP</option>
+                                    <option value="Uang Gedung">Uang Gedung</option>
+                                    <option value="Praktikum">Praktikum</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filterBulan">Bulan</label>
+                                <select id="filterBulan">
+                                    <option value="">Semua Bulan</option>
+                                    <option value="1">Januari</option>
+                                    <option value="2">Februari</option>
+                                    <option value="3">Maret</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="filterStatus">Status</label>
+                                <select id="filterStatus">
+                                    <option value="">Semua Status</option>
+                                    <option value="aktif">Aktif</option>
+                                    <option value="nonaktif">Nonaktif</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-outline" id="applyBillFilter">Terapkan</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bills Table -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Daftar Tagihan</h3>
+                        <div class="table-summary">
+                            <span>Total: <strong>8,500</strong> tagihan</span>
+                            <span>Lunas: <strong class="text-success">7,200</strong></span>
+                            <span>Belum: <strong class="text-danger">1,300</strong></span>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Kode Tagihan</th>
+                                    <th>Jenis</th>
+                                    <th>Periode</th>
+                                    <th>Jumlah</th>
+                                    <th>Jatuh Tempo</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="billsTable">
+                                <!-- Data diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <button class="btn btn-outline" id="prevPage">Sebelumnya</button>
+                        <span class="page-info">Halaman 1 dari 170</span>
+                        <button class="btn btn-outline" id="nextPage">Selanjutnya</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Jenis Pembayaran -->
+            <div class="tab-content" id="jenisTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Jenis Pembayaran</h3>
+                        <button class="btn btn-primary" id="addPaymentType">
+                            <i class="fas fa-plus"></i> Tambah Jenis
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kode</th>
+                                    <th>Nama Pembayaran</th>
+                                    <th>Jumlah</th>
+                                    <th>Kelas</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SPP</td>
+                                    <td>SPP Bulanan</td>
+                                    <td>Rp 350.000</td>
+                                    <td>Semua Kelas</td>
+                                    <td><span class="status success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Edit</button>
+                                        <button class="btn btn-sm btn-danger">Nonaktifkan</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>UG</td>
+                                    <td>Uang Gedung</td>
+                                    <td>Rp 500.000</td>
+                                    <td>Kelas X</td>
+                                    <td><span class="status success">Aktif</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline">Edit</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content: Template -->
+            <div class="tab-content" id="templateTab">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Template Tagihan</h3>
+                        <button class="btn btn-primary" id="addTemplate">
+                            <i class="fas fa-plus"></i> Buat Template
+                        </button>
+                    </div>
+                    
+                    <div class="templates-grid">
+                        <div class="template-card">
+                            <h4>SPP Bulanan</h4>
+                            <p>Tagihan SPP rutin setiap bulan</p>
+                            <div class="template-info">
+                                <span><i class="fas fa-money-bill-wave"></i> Rp 350.000</span>
+                                <span><i class="fas fa-calendar"></i> Setiap bulan</span>
+                            </div>
+                            <div class="template-actions">
+                                <button class="btn btn-sm btn-primary">Gunakan</button>
+                                <button class="btn btn-sm btn-outline">Edit</button>
+                            </div>
+                        </div>
+                        
+                        <div class="template-card">
+                            <h4>Uang Praktikum</h4>
+                            <p>Biaya praktikum semester ganjil</p>
+                            <div class="template-info">
+                                <span><i class="fas fa-money-bill-wave"></i> Rp 150.000</span>
+                                <span><i class="fas fa-calendar"></i> Semester</span>
+                            </div>
+                            <div class="template-actions">
+                                <button class="btn btn-sm btn-primary">Gunakan</button>
+                                <button class="btn btn-sm btn-outline">Edit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Buat Tagihan -->
+    <div class="modal" id="billModal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Buat Tagihan Baru</h3>
+                <button class="close-modal" id="closeBillModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="billForm">
+                    <!-- Step 1: Pilih Jenis -->
+                    <div class="form-step active" data-step="1">
+                        <h4>Pilih Jenis Tagihan</h4>
+                        <div class="payment-types">
+                            <div class="payment-type active">
+                                <i class="fas fa-file-invoice"></i>
+                                <h5>SPP Bulanan</h5>
+                                <p>Rp 350.000</p>
+                            </div>
+                            <div class="payment-type">
+                                <i class="fas fa-university"></i>
+                                <h5>Uang Gedung</h5>
+                                <p>Rp 500.000</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary next-step" data-next="2">Lanjut</button>
+                    </div>
+                    
+                    <!-- Step 2: Pilih Siswa -->
+                    <div class="form-step" data-step="2">
+                        <h4>Pilih Siswa</h4>
+                        <div class="selection-options">
+                            <label>
+                                <input type="radio" name="studentSelection" value="all" checked> Semua Siswa
+                            </label>
+                            <label>
+                                <input type="radio" name="studentSelection" value="class"> Per Kelas
+                            </label>
+                            <label>
+                                <input type="radio" name="studentSelection" value="individual"> Perorangan
+                            </label>
+                        </div>
+                        
+                        <div class="class-selection" id="classSelection">
+                            <select id="selectedClass">
+                                <option value="">Pilih Kelas</option>
+                                <option value="X">Kelas X</option>
+                                <option value="XI">Kelas XI</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline prev-step" data-prev="1">Kembali</button>
+                        <button type="button" class="btn btn-primary next-step" data-next="3">Lanjut</button>
+                    </div>
+                    
+                    <!-- Step 3: Setting -->
+                    <div class="form-step" data-step="3">
+                        <h4>Setting Tagihan</h4>
+                        <div class="form-group">
+                            <label for="dueDate">Tanggal Jatuh Tempo</label>
+                            <input type="date" id="dueDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="periode">Periode Tagihan</label>
+                            <input type="month" id="periode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="keterangan">Keterangan</label>
+                            <textarea id="keterangan" rows="2"></textarea>
+                        </div>
+                        
+                        <div class="summary">
+                            <h5>Ringkasan:</h5>
+                            <p>Jenis: <strong>SPP Bulanan</strong></p>
+                            <p>Jumlah: <strong>Rp 350.000</strong></p>
+                            <p>Jumlah Siswa: <strong>50 siswa</strong></p>
+                            <p>Total: <strong class="text-primary">Rp 17.500.000</strong></p>
+                        </div>
+                        
+                        <button type="button" class="btn btn-outline prev-step" data-prev="2">Kembali</button>
+                        <button type="submit" class="btn btn-primary">Buat Tagihan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pay<span>Edu</span> Admin</h3>
+                    <p>Sistem administrasi pembayaran sekolah yang terintegrasi.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Menu Admin</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="siswa.html">Data Siswa</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="laporan.html">Laporan</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Teknis</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678 ext. 2</li>
+                        <li><i class="fas fa-envelope"></i> admin@payedu.sch.id</li>
+                        <li><i class="fas fa-headset"></i> Support: 08:00 - 17:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Hak akses terbatas untuk admin.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/admin-tagihan.js"></script>
+</body>
+</html>

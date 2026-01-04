@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Siswa - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body class="logged-in admin">
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="../../index.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                                        <h1>Admin</h1>
+
+                </a>
+
+                <!-- Navigation for admin -->
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="siswa.html" class="active"><i class="fas fa-users"></i> Data Siswa</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+                        <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+
+                <!-- User menu -->
+                <div class="user-menu">
+                    <div class="user-info">
+                        <i class="fas fa-user-tie"></i>
+                        <span id="usernameDisplay">Administrator</span>
+                    </div>
+                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
+                </div>
+
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Sidebar -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu Admin</h3>
+            <button class="close-sidebar" id="closeSidebar">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="siswa.html" class="active"><i class="fas fa-users"></i> Data Siswa</a></li>
+            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+            <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h2>Data Siswa</h2>
+                <p>Kelola data siswa dan akun mereka</p>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="card mb-20">
+                <div class="toolbar">
+                    <div class="search-box">
+                        <input type="text" id="searchStudent" placeholder="Cari siswa berdasarkan nama, NIS, atau kelas...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button class="btn btn-primary" id="addStudentBtn">
+                            <i class="fas fa-user-plus"></i> Tambah Siswa
+                        </button>
+                        <button class="btn btn-success" id="exportStudents">
+                            <i class="fas fa-file-excel"></i> Export
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Filter -->
+                <div class="filter-section">
+                    <div class="filter-controls">
+                        <div class="form-group">
+                            <label for="filterKelas">Kelas</label>
+                            <select id="filterKelas">
+                                <option value="">Semua Kelas</option>
+                                <option value="X">Kelas X</option>
+                                <option value="XI">Kelas XI</option>
+                                <option value="XII">Kelas XII</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterJurusan">Jurusan</label>
+                            <select id="filterJurusan">
+                                <option value="">Semua Jurusan</option>
+                                <option value="IPA">IPA</option>
+                                <option value="IPS">IPS</option>
+                                <option value="Bahasa">Bahasa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterStatus">Status</label>
+                            <select id="filterStatus">
+                                <option value="">Semua Status</option>
+                                <option value="aktif">Aktif</option>
+                                <option value="nonaktif">Nonaktif</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-outline" id="applyFilter">Terapkan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Daftar Siswa</h3>
+                    <div class="table-summary">
+                        <span>Total: <strong>850</strong> siswa</span>
+                        <span>Aktif: <strong class="text-success">825</strong></span>
+                        <span>Nonaktif: <strong class="text-danger">25</strong></span>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>NIS</th>
+                                <th>Nama Siswa</th>
+                                <th>Kelas</th>
+                                <th>Jurusan</th>
+                                <th>Telepon</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTable">
+                            <!-- Data diisi oleh JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination">
+                    <button class="btn btn-outline" id="prevPage">
+                        <i class="fas fa-chevron-left"></i> Sebelumnya
+                    </button>
+                    <span class="page-info">Halaman 1 dari 85</span>
+                    <button class="btn btn-outline" id="nextPage">
+                        Selanjutnya <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Tambah/Edit Siswa -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Tambah Siswa Baru</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="studentForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="nis">NIS</label>
+                            <input type="text" id="nis" placeholder="Nomor Induk Siswa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nama">Nama Lengkap</label>
+                            <input type="text" id="nama" placeholder="Nama lengkap siswa" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="kelas">Kelas</label>
+                            <select id="kelas" required>
+                                <option value="">Pilih Kelas</option>
+                                <option value="X">Kelas X</option>
+                                <option value="XI">Kelas XI</option>
+                                <option value="XII">Kelas XII</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="jurusan">Jurusan</label>
+                            <select id="jurusan" required>
+                                <option value="">Pilih Jurusan</option>
+                                <option value="IPA">IPA</option>
+                                <option value="IPS">IPS</option>
+                                <option value="Bahasa">Bahasa</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="telepon">Nomor Telepon</label>
+                            <input type="tel" id="telepon" placeholder="0812-3456-7890">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" placeholder="email@example.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="alamat">Alamat</label>
+                        <textarea id="alamat" rows="3" placeholder="Alamat lengkap"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status">
+                            <option value="aktif">Aktif</option>
+                            <option value="nonaktif">Nonaktif</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-outline" id="cancelModal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Reset Password -->
+    <div class="modal" id="resetPasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reset Password Siswa</h3>
+                <button class="close-modal" id="closeResetModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="student-info">
+                    <p><strong>NIS:</strong> <span id="resetNIS">-</span></p>
+                    <p><strong>Nama:</strong> <span id="resetNama">-</span></p>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Password Baru</label>
+                    <input type="password" id="newPassword" placeholder="Masukkan password baru">
+                    <small>Minimum 8 karakter</small>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Konfirmasi Password</label>
+                    <input type="password" id="confirmPassword" placeholder="Konfirmasi password baru">
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" id="generatePassword">Generate Password</button>
+                    <small>Password yang digenerate: <code id="generatedPassword">siswa123</code></small>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="savePassword">Reset Password</button>
+                    <button class="btn btn-outline" id="cancelReset">Batal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <h3>Pay<span>Edu</span> Admin</h3>
+                    <p>Sistem administrasi pembayaran sekolah yang terintegrasi.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Menu Admin</h4>
+                    <ul class="footer-links">
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="siswa.html">Data Siswa</a></li>
+                        <li><a href="tagihan.html">Tagihan</a></li>
+                        <li><a href="laporan.html">Laporan</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Kontak Teknis</h4>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-phone"></i> (021) 1234-5678 ext. 2</li>
+                        <li><i class="fas fa-envelope"></i> admin@payedu.sch.id</li>
+                        <li><i class="fas fa-headset"></i> Support: 08:00 - 17:00</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Hak akses terbatas untuk admin.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../../assets/js/main.js"></script>
+    <script src="../../assets/js/admin-siswa.js"></script>
+</body>
+</html>
