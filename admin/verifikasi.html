@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Pembayaran - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/css/style.css">
+    
+    <style>
+        /* --- CSS KHUSUS HALAMAN VERIFIKASI --- */
+        
+        body { padding-bottom: 50px;
+        overflow-y: scroll; }
+
+        /* 1. Filter Section (Split Left & Right) */
+        .filter-section {
+            display: flex;
+            justify-content: space-between; /* Memisahkan kiri dan kanan */
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        /* Bagian Kiri (Search) */
+        .filter-left {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        /* Bagian Kanan (Dropdowns) */
+        .filter-right {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Search Box Styling */
+        .search-box {
+            position: relative;
+            width: 100%;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        .search-box input:focus {
+            border-color: #4a6cf7;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+        }
+
+        /* Select Styling */
+        .filter-select {
+            padding: 12px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            background: white;
+            color: #64748b;
+            font-family: 'Poppins', sans-serif;
+            font-size: 13px;
+            cursor: pointer;
+            outline: none;
+        }
+        .filter-select:focus { border-color: #4a6cf7; }
+
+        /* 2. Tabel Styling */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th { text-align: left; padding: 15px; font-size: 13px; color: #64748b; border-bottom: 2px solid #f1f5f9; background: #f8fafc; }
+        td { padding: 15px; font-size: 14px; border-bottom: 1px solid #f1f5f9; color: #1e293b; vertical-align: middle; }
+        
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { 
+            width: 35px; height: 35px; 
+            background: #eef2ff; color: #4a6cf7; 
+            border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 600; font-size: 14px;
+        }
+
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge.pending { background: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; }
+
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 8px; }
+        .btn-action {
+            width: 35px; height: 35px;
+            border-radius: 8px; border: none;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-action.view { background: #f1f5f9; color: #64748b; }
+        .btn-action.view:hover { background: #e2e8f0; color: #1e293b; }
+        
+        .btn-action.approve { background: #d1fae5; color: #059669; }
+        .btn-action.approve:hover { background: #10b981; color: white; }
+
+        .btn-action.reject { background: #fee2e2; color: #ef4444; }
+        .btn-action.reject:hover { background: #ef4444; color: white; }
+
+        /* --- MODAL BUKTI TRANSFER (POPUP) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none; justify-content: center; align-items: center;
+            opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; padding: 20px; border-radius: 12px;
+            max-width: 400px; width: 90%; text-align: center; position: relative;
+        }
+        .modal-content img {
+            max-width: 100%; border-radius: 8px; border: 2px solid #f1f5f9; margin-bottom: 15px; max-height: 400px; object-fit: contain;
+        }
+        .modal-close {
+            position: absolute; top: -40px; right: 0; color: white; font-size: 30px; cursor: pointer;
+        }
+        .modal-details { text-align: left; margin-top: 10px; background: #f8fafc; padding: 10px; border-radius: 8px; }
+        .modal-details p { margin: 5px 0; font-size: 13px; color: #64748b; }
+        .modal-details strong { color: #1e293b; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .filter-section { flex-direction: column; align-items: stretch; }
+            .filter-right { width: 100%; }
+            .filter-select { flex: 1; }
+        }
+
+    </style>
+</head>
+<body class="logged-in admin">
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="dashboard.html" class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Admin</h1>
+                </a>
+                <nav class="nav-desktop">
+                    <ul>
+                        <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                        <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+                        <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="verifikasi.html" class="active"><i class="fas fa-check-circle"></i> Verifikasi</a></li>
+                        <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+                        <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+                    </ul>
+                </nav>
+                <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
+                    <a href="../../index.html" class="btn btn-outline" style="padding: 8px 20px; display: none;">Keluar</a>
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+                </div>
+            </div>
+        </div>
+        <style> @media(min-width: 769px) { .user-menu .btn-outline { display: block !important; } } </style>
+    </header>
+
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="mobile-sidebar-header">
+            <h3>Menu Admin</h3>
+            <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
+            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+            <li><a href="verifikasi.html" class="active"><i class="fas fa-check-circle"></i> Verifikasi</a></li>
+            <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
+            <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
+            <li><a href="../../index.html" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+        </ul>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header" style="margin-bottom: 25px;">
+                <h2 style="color: #1e293b; font-weight: 700;">Verifikasi Pembayaran</h2>
+                <p style="color: #64748b;">Periksa bukti transfer siswa sebelum disetujui.</p>
+            </div>
+
+            <div class="card">
+                <div class="filter-section">
+                    
+                    <div class="filter-left">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Cari nama siswa atau kelas...">
+                        </div>
+                    </div>
+
+                    <div class="filter-right">
+                        <select class="filter-select" id="filterKelas">
+                            <option value="">Semua Kelas</option>
+                            <option value="10">Kelas X</option>
+                            <option value="11">Kelas XI</option>
+                            <option value="12">Kelas XII</option>
+                        </select>
+                        <select class="filter-select" id="filterMetode">
+                            <option value="">Semua Metode</option>
+                            <option value="bca">Transfer BCA</option>
+                            <option value="bri">Transfer BRI</option>
+                            <option value="mandiri">Transfer Mandiri</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table id="verifikasiTable">
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Siswa</th>
+                                <th>Tagihan</th>
+                                <th>Nominal</th>
+                                <th>Metode</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="data-row" data-kelas="12" data-metode="bca">
+                                <td>08 Mei 2024<br><small style="color:#94a3b8">14:30 WIB</small></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">BS</div>
+                                        <div class="user-info">
+                                            <strong>Budi Santoso</strong><br>
+                                            <small style="color:#64748b">XII IPA 1</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>SPP Mei 2024</td>
+                                <td style="font-weight: 600;">Rp 350.000</td>
+                                <td>Transfer BCA</td>
+                                <td><span class="badge pending">Menunggu</span></td>
+                                <td>
+                                   <div class="action-buttons">
+    <button class="btn-action view" onclick="openProofModal(this, 'Budi Santoso', 'SPP Mei 2024', 'Rp 350.000', '')">
+        <i class="fas fa-eye"></i>
+    </button>
+    
+    <button class="btn-action approve" onclick="approveItem(this)">
+        <i class="fas fa-check"></i>
+    </button>
+    
+    <button class="btn-action reject" onclick="rejectItem(this)">
+        <i class="fas fa-times"></i>
+    </button>
+</div>
+                                </td>
+                            </tr>
+
+                            <tr class="data-row" data-kelas="11" data-metode="bri">
+                                <td>08 Mei 2024<br><small style="color:#94a3b8">13:15 WIB</small></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar" style="background:#ecfdf5; color:#10b981">SA</div>
+                                        <div class="user-info">
+                                            <strong>Siti Aminah</strong><br>
+                                            <small style="color:#64748b">XI IPS 2</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>Uang Gedung</td>
+                                <td style="font-weight: 600;">Rp 1.500.000</td>
+                                <td>Transfer BRI</td>
+                                <td><span class="badge pending">Menunggu</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action view" onclick="openProofModal(this, 'Siti Aminah', 'Uang Gedung', 'Rp 1.500.000', 'https://via.placeholder.com/400x500?text=Bukti+Siti')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-action approve" onclick="approveItem(this)"><i class="fas fa-check"></i></button>
+                                        <button class="btn-action reject" onclick="rejectItem(this)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                             <tr class="data-row" data-kelas="10" data-metode="mandiri">
+                                <td>08 Mei 2024<br><small style="color:#94a3b8">10:00 WIB</small></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar" style="background:#fffbeb; color:#f59e0b">DP</div>
+                                        <div class="user-info">
+                                            <strong>Dimas Pratama</strong><br>
+                                            <small style="color:#64748b">X IPA 3</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>SPP Mei 2024</td>
+                                <td style="font-weight: 600;">Rp 300.000</td>
+                                <td>Transfer Mandiri</td>
+                                <td><span class="badge pending">Menunggu</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="btn-action view" onclick="openProofModal(this, 'Dimas Pratama', 'SPP Mei 2024', 'Rp 300.000', 'https://via.placeholder.com/400x500?text=Bukti+Dimas')"><i class="fas fa-eye"></i></button>
+                                        <button class="btn-action approve" onclick="approveItem(this)"><i class="fas fa-check"></i></button>
+                                        <button class="btn-action reject" onclick="rejectItem(this)"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div id="noDataMessage" style="display:none; text-align:center; padding: 20px; color: #64748b;">
+                        Data tidak ditemukan.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="proofModal">
+        <div class="modal-close" onclick="closeProofModal()">&times;</div>
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px; color:#1e293b;">Bukti Transfer</h3>
+            <img id="modalImage" src="" alt="Bukti Transfer">
+            <div class="modal-details">
+                <p>Siswa: <strong id="modalSiswa">-</strong></p>
+                <p>Tagihan: <strong id="modalTagihan">-</strong></p>
+                <p>Nominal: <strong id="modalNominal">-</strong></p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-primary" style="flex: 1; background: #10b981; border:none;" id="modalApproveBtn">Verifikasi</button>
+                <button class="btn btn-outline" style="flex: 1; color: #ef4444; border-color: #ef4444;" onclick="closeProofModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. LOGIKA UTAMA (FILTER & SEARCH) ---
+        const searchInput = document.getElementById('searchInput');
+        const filterKelas = document.getElementById('filterKelas');
+        const filterMetode = document.getElementById('filterMetode');
+        const tableRows = document.querySelectorAll('.data-row');
+        const noDataMessage = document.getElementById('noDataMessage');
+
+        function filterTable() {
+            const searchText = searchInput.value.toLowerCase();
+            const selectedKelas = filterKelas.value;
+            const selectedMetode = filterMetode.value;
+            let visibleCount = 0;
+
+            tableRows.forEach(row => {
+                // Ambil data dari baris
+                const textContent = row.innerText.toLowerCase();
+                const rowKelas = row.getAttribute('data-kelas');
+                const rowMetode = row.getAttribute('data-metode');
+
+                // Cek kondisi filter
+                const matchesSearch = textContent.includes(searchText);
+                const matchesKelas = selectedKelas === "" || rowKelas === selectedKelas;
+                const matchesMetode = selectedMetode === "" || rowMetode === selectedMetode;
+
+                // Tampilkan atau sembunyikan
+                if (matchesSearch && matchesKelas && matchesMetode) {
+                    row.style.display = "";
+                    visibleCount++;
+                } else {
+                    row.style.display = "none";
+                }
+            });
+
+            // Tampilkan pesan jika tidak ada data
+            noDataMessage.style.display = visibleCount === 0 ? "block" : "none";
+        }
+
+        // Event Listeners untuk Filter
+        searchInput.addEventListener('keyup', filterTable);
+        filterKelas.addEventListener('change', filterTable);
+        filterMetode.addEventListener('change', filterTable);
+
+
+        // --- 2. LOGIKA TOMBOL AKSI (TERIMA & TOLAK) ---
+        
+        // Fungsi Terima (Centang)
+        function approveItem(button) {
+            if(confirm('Apakah Anda yakin ingin menyetujui pembayaran ini?')) {
+                const row = button.closest('tr');
+                
+                // Animasi fade out simple
+                row.style.transition = "opacity 0.5s";
+                row.style.opacity = "0";
+                
+                setTimeout(() => {
+                    row.remove(); // Hapus dari tabel
+                    alert('Pembayaran BERHASIL diverifikasi!');
+                    filterTable(); // Cek ulang jumlah baris
+                }, 500);
+            }
+        }
+
+        // Fungsi Tolak (Silang)
+        function rejectItem(button) {
+            const alasan = prompt("Masukkan alasan penolakan (misal: Bukti buram):");
+            if (alasan) {
+                const row = button.closest('tr');
+                
+                row.style.transition = "opacity 0.5s";
+                row.style.opacity = "0";
+                
+                setTimeout(() => {
+                    row.remove();
+                    alert(`Pembayaran DITOLAK.\nAlasan: ${alasan}`);
+                    filterTable();
+                }, 500);
+            }
+        }
+
+
+        // --- 3. LOGIKA MODAL (LIHAT BUKTI) ---
+        const modal = document.getElementById('proofModal');
+        let currentActiveRow = null; // Menyimpan baris yang sedang dibuka di modal
+
+function openProofModal(btnElement, nama, tagihan, nominal, imgSrc) {
+    // 1. Isi Data Teks
+    document.getElementById('modalSiswa').innerText = nama;
+    document.getElementById('modalTagihan').innerText = tagihan;
+    document.getElementById('modalNominal').innerText = nominal;
+    
+    // 2. Logika Cek Gambar (Biar tidak broken image)
+    const imgElement = document.getElementById('modalImage');
+    
+    // Cek apakah ada elemen placeholder sebelumnya? Kalau ada hapus dulu biar ga numpuk
+    const oldPlaceholder = document.getElementById('tempPlaceholder');
+    if(oldPlaceholder) oldPlaceholder.remove();
+
+    if (imgSrc === '' || imgSrc === null) {
+        // KONDISI: TIDAK ADA GAMBAR / BELUM UPLOAD
+        imgElement.style.display = 'none'; // Sembunyikan tag img asli
+        
+        // Buat elemen kotak abu-abu sementara (Placeholder CI3 nanti)
+        const placeholder = document.createElement('div');
+        placeholder.id = 'tempPlaceholder';
+        placeholder.style.width = '100%';
+        placeholder.style.height = '300px';
+        placeholder.style.background = '#f1f5f9';
+        placeholder.style.display = 'flex';
+        placeholder.style.alignItems = 'center';
+        placeholder.style.justifyContent = 'center';
+        placeholder.style.borderRadius = '8px';
+        placeholder.style.color = '#64748b';
+        placeholder.style.marginBottom = '15px';
+        placeholder.innerHTML = '<div style="text-align:center"><i class="fas fa-image" style="font-size:40px; margin-bottom:10px;"></i><br>Foto Bukti Transfer<br>(Nanti load dari CI3)</div>';
+        
+        // Masukkan placeholder sebelum detail
+        imgElement.parentNode.insertBefore(placeholder, imgElement.nextSibling);
+
+    } else {
+        // KONDISI: ADA GAMBAR
+        imgElement.style.display = 'block'; // Munculkan gambar
+        imgElement.src = imgSrc;
+    }
+    
+    // 3. Simpan baris yang sedang aktif untuk fitur approve
+    currentActiveRow = btnElement.closest('tr');
+
+    // 4. Tampilkan modal
+    const modal = document.getElementById('proofModal');
+    modal.classList.add('active');
+}
+        function closeProofModal() {
+            modal.classList.remove('active');
+            currentActiveRow = null;
+        }
+
+        // Tombol Verifikasi DI DALAM Modal
+        document.getElementById('modalApproveBtn').addEventListener('click', function() {
+            if (currentActiveRow) {
+                closeProofModal();
+                // Cari tombol approve di baris aslinya dan klik secara programatik
+                const approveBtn = currentActiveRow.querySelector('.btn-action.approve');
+                if(approveBtn) approveBtn.click();
+            }
+        });
+
+        // Tutup modal jika klik overlay
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) closeProofModal();
+        });
+
+
+        // --- 4. SIDEBAR MENU ---
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburger = document.getElementById('hamburger');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            const closeSidebar = document.getElementById('closeSidebar');
+
+            function toggleMenu() {
+                mobileSidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+                hamburger.classList.toggle('active');
+            }
+
+            if(hamburger) hamburger.addEventListener('click', toggleMenu);
+            if(closeSidebar) closeSidebar.addEventListener('click', toggleMenu);
+            if(overlay) overlay.addEventListener('click', toggleMenu);
+        });
+    </script>
+</body>
+</html>

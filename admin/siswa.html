@@ -7,319 +7,520 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+    
+    <style>
+        /* --- CSS TAMBAHAN KHUSUS ADMIN SISWA --- */
+        body { padding-bottom: 50px; 
+        overflow-y: scroll;}
+
+        /* Toolbar & Filter (Sesuai Request Sebelumnya) */
+        .toolbar-card {
+            background: white; padding: 20px; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px;
+            display: flex; gap: 15px; align-items: center; flex-wrap: wrap;
+        }
+        .search-group { flex: 2; position: relative; min-width: 200px; }
+        .search-group input {
+            width: 100%; padding: 12px 15px 12px 45px; border: 1px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; background: #f8fafc; transition: 0.3s;
+        }
+        .search-group input:focus { background: white; border-color: #4a6cf7; outline: none; }
+        .search-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        
+        .filter-group { flex: 1; min-width: 150px; }
+        .filter-group select {
+            width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0;
+            border-radius: 10px; background: white; color: #64748b; cursor: pointer; outline: none;
+        }
+        
+        .btn-add-new {
+            background: #4a6cf7; color: white; padding: 12px 25px; border-radius: 10px;
+            font-weight: 500; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            white-space: nowrap; transition: 0.2s;
+        }
+        .btn-add-new:hover { background: #3758f9; }
+
+        /* Tabel Styling */
+        .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th { text-align: left; padding: 15px; font-size: 13px; color: #64748b; border-bottom: 2px solid #f1f5f9; background: #f8fafc; }
+        td { padding: 15px; font-size: 14px; border-bottom: 1px solid #f1f5f9; color: #1e293b; vertical-align: middle; }
+        .user-cell { display: flex; align-items: center; gap: 10px; }
+        .user-avatar { 
+            width: 35px; height: 35px; background: #eef2ff; color: #4a6cf7; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px;
+        }
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge.active-st { background: #ecfdf5; color: #059669; }
+        .badge.inactive-st { background: #fef2f2; color: #ef4444; }
+
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 8px; }
+        .btn-action { width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 12px; }
+        
+        .btn-action.view { background: #f0f9ff; color: #0ea5e9; } /* Biru Langit (Detail) */
+        .btn-action.view:hover { background: #0ea5e9; color: white; }
+
+        .btn-action.edit { background: #fff7ed; color: #ea580c; } /* Orange (Edit) */
+        .btn-action.edit:hover { background: #ea580c; color: white; }
+        
+        .btn-action.password { background: #eef2ff; color: #4a6cf7; } /* Biru (Reset) */
+        .btn-action.password:hover { background: #4a6cf7; color: white; }
+
+        .btn-action.delete { background: #fef2f2; color: #ef4444; } /* Merah (Hapus) */
+        .btn-action.delete:hover { background: #ef4444; color: white; }
+
+        /* --- MODAL STYLING (SCROLLABLE FORM) --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: flex-start; /* Align Top */
+            padding-top: 50px; opacity: 0; transition: opacity 0.3s; overflow-y: auto;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+
+        .modal-content {
+            background: white; width: 800px; /* Lebih Lebar */
+            max-width: 95%; border-radius: 16px; position: relative;
+            margin-bottom: 50px; display: flex; flex-direction: column;
+            max-height: 85vh; /* Biar bisa discroll */
+        }
+        .modal-header { padding: 20px 30px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 30px; overflow-y: auto; }
+        
+        .form-section-title { font-size: 16px; font-weight: 600; color: #4a6cf7; margin-bottom: 15px; padding-bottom: 5px; border-bottom: 1px dashed #e2e8f0; display: flex; align-items: center; gap: 8px; margin-top: 20px; }
+        .form-section-title:first-child { margin-top: 0; }
+        
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: #64748b; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
+        .form-control:focus { border-color: #4a6cf7; outline: none; }
+        
+        /* Modal Detail View Specific */
+        .detail-row { display: flex; border-bottom: 1px solid #f8fafc; padding: 10px 0; }
+        .detail-label { width: 150px; color: #64748b; font-size: 13px; }
+        .detail-value { flex: 1; font-weight: 500; color: #1e293b; font-size: 14px; }
+
+    </style>
 </head>
 <body class="logged-in admin">
-    <!-- Header -->
+    
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="../../index.html" class="logo">
+                <a href="dashboard.html" class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                                        <h1>Admin</h1>
-
+                    <h1>Admin</h1>
                 </a>
-
-                <!-- Navigation for admin -->
                 <nav class="nav-desktop">
                     <ul>
                         <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                         <li><a href="siswa.html" class="active"><i class="fas fa-users"></i> Data Siswa</a></li>
                         <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="verifikasi.html"><i class="fas fa-check-circle"></i> Verifikasi</a></li>
                         <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
                         <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
                     </ul>
                 </nav>
-
-                <!-- User menu -->
-                <div class="user-menu">
-                    <div class="user-info">
-                        <i class="fas fa-user-tie"></i>
-                        <span id="usernameDisplay">Administrator</span>
-                    </div>
-                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
-                </div>
-
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
+                    <a href="../../index.html" class="btn btn-outline" style="padding: 8px 20px; display: none;">Keluar</a>
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                 </div>
             </div>
         </div>
+        <style> @media(min-width: 769px) { .user-menu .btn-outline { display: block !important; } } </style>
     </header>
 
-    <!-- Mobile Sidebar -->
     <div class="mobile-sidebar" id="mobileSidebar">
-        <div class="mobile-sidebar-header">
-            <h3>Menu Admin</h3>
-            <button class="close-sidebar" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        <div class="mobile-sidebar-header"><h3>Menu Admin</h3><button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button></div>
         <ul class="sidebar-menu">
-            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="siswa.html" class="active"><i class="fas fa-users"></i> Data Siswa</a></li>
-            <li><a href="tagihan.html"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
-            <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
-            <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
-            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="siswa.html" class="active">Data Siswa</a></li>
+            <li><a href="../../index.html" style="color: #ef4444;">Keluar</a></li>
         </ul>
     </div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <div class="page-header">
-                <h2>Data Siswa</h2>
-                <p>Kelola data siswa dan akun mereka</p>
+            <div class="page-header" style="margin-bottom: 20px;">
+                <h2 style="color: #1e293b; font-weight: 700;">Data Siswa</h2>
+                <p style="color: #64748b;">Kelola data lengkap siswa, orang tua, dan akun.</p>
             </div>
 
-            <!-- Toolbar -->
-            <div class="card mb-20">
-                <div class="toolbar">
-                    <div class="search-box">
-                        <input type="text" id="searchStudent" placeholder="Cari siswa berdasarkan nama, NIS, atau kelas...">
-                        <i class="fas fa-search"></i>
-                    </div>
-                    <div class="toolbar-actions">
-                        <button class="btn btn-primary" id="addStudentBtn">
-                            <i class="fas fa-user-plus"></i> Tambah Siswa
-                        </button>
-                        <button class="btn btn-success" id="exportStudents">
-                            <i class="fas fa-file-excel"></i> Export
-                        </button>
-                    </div>
+            <div class="toolbar-card">
+                <div class="search-group">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Cari nama, NIS, atau NISN...">
                 </div>
-                
-                <!-- Filter -->
-                <div class="filter-section">
-                    <div class="filter-controls">
-                        <div class="form-group">
-                            <label for="filterKelas">Kelas</label>
-                            <select id="filterKelas">
-                                <option value="">Semua Kelas</option>
-                                <option value="X">Kelas X</option>
-                                <option value="XI">Kelas XI</option>
-                                <option value="XII">Kelas XII</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="filterJurusan">Jurusan</label>
-                            <select id="filterJurusan">
-                                <option value="">Semua Jurusan</option>
-                                <option value="IPA">IPA</option>
-                                <option value="IPS">IPS</option>
-                                <option value="Bahasa">Bahasa</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="filterStatus">Status</label>
-                            <select id="filterStatus">
-                                <option value="">Semua Status</option>
-                                <option value="aktif">Aktif</option>
-                                <option value="nonaktif">Nonaktif</option>
-                            </select>
-                        </div>
-                        <button class="btn btn-outline" id="applyFilter">Terapkan</button>
-                    </div>
+                <div class="filter-group">
+                    <select id="filterKelas">
+                        <option value="">Semua Kelas</option>
+                        <option value="10">Kelas X</option>
+                        <option value="11">Kelas XI</option>
+                        <option value="12">Kelas XII</option>
+                    </select>
+                </div>
+                <div class="action-group">
+                    <button class="btn-add-new" onclick="openModal('add')">
+                        <i class="fas fa-user-plus"></i> Tambah Siswa
+                    </button>
                 </div>
             </div>
 
-            <!-- Students Table -->
             <div class="card">
-                <div class="card-header">
-                    <h3>Daftar Siswa</h3>
-                    <div class="table-summary">
-                        <span>Total: <strong>850</strong> siswa</span>
-                        <span>Aktif: <strong class="text-success">825</strong></span>
-                        <span>Nonaktif: <strong class="text-danger">25</strong></span>
-                    </div>
-                </div>
-                
                 <div class="table-responsive">
-                    <table>
+                    <table id="siswaTable">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>NIS</th>
+                                <th>NIS / NISN</th>
                                 <th>Nama Siswa</th>
+                                <th>L/P</th>
                                 <th>Kelas</th>
-                                <th>Jurusan</th>
                                 <th>Telepon</th>
-                                <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
-                        <tbody id="studentsTable">
-                            <!-- Data diisi oleh JavaScript -->
-                        </tbody>
+                        <tbody id="tableBody">
+                            </tbody>
                     </table>
                 </div>
-                
-                <!-- Pagination -->
                 <div class="pagination">
-                    <button class="btn btn-outline" id="prevPage">
-                        <i class="fas fa-chevron-left"></i> Sebelumnya
-                    </button>
-                    <span class="page-info">Halaman 1 dari 85</span>
-                    <button class="btn btn-outline" id="nextPage">
-                        Selanjutnya <i class="fas fa-chevron-right"></i>
-                    </button>
+                    <button class="btn-page"><i class="fas fa-chevron-left"></i></button>
+                    <span class="page-info">Halaman 1 dari 5</span>
+                    <button class="btn-page"><i class="fas fa-chevron-right"></i></button>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Modal Tambah/Edit Siswa -->
-    <div class="modal" id="studentModal">
+    <div class="modal-overlay" id="siswaModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3 id="modalTitle">Tambah Siswa Baru</h3>
-                <button class="close-modal" id="closeModal">&times;</button>
+                <button class="close-modal" onclick="closeModal('siswaModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="studentForm">
-                    <div class="form-row">
+                <form id="siswaForm">
+                    <div class="form-section-title"><i class="fas fa-user-circle"></i> Informasi Pribadi</div>
+                    <div class="form-grid">
                         <div class="form-group">
-                            <label for="nis">NIS</label>
-                            <input type="text" id="nis" placeholder="Nomor Induk Siswa" required>
+                            <label>NIS</label>
+                            <input type="text" class="form-control" placeholder="Contoh: 2024001" required>
                         </div>
                         <div class="form-group">
-                            <label for="nama">Nama Lengkap</label>
-                            <input type="text" id="nama" placeholder="Nama lengkap siswa" required>
+                            <label>NISN</label>
+                            <input type="text" class="form-control" placeholder="00xxxxxx" required>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Nama Lengkap</label>
+                            <input type="text" class="form-control" placeholder="Sesuai Ijazah" required>
+                        </div>
                         <div class="form-group">
-                            <label for="kelas">Kelas</label>
-                            <select id="kelas" required>
-                                <option value="">Pilih Kelas</option>
-                                <option value="X">Kelas X</option>
-                                <option value="XI">Kelas XI</option>
-                                <option value="XII">Kelas XII</option>
+                            <label>Tempat Lahir</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Lahir</label>
+                            <input type="date" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Jenis Kelamin</label>
+                            <select class="form-control">
+                                <option value="L">Laki-laki</option>
+                                <option value="P">Perempuan</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="jurusan">Jurusan</label>
-                            <select id="jurusan" required>
-                                <option value="">Pilih Jurusan</option>
+                            <label>Agama</label>
+                            <select class="form-control">
+                                <option value="Islam">Islam</option>
+                                <option value="Kristen">Kristen</option>
+                                <option value="Katolik">Katolik</option>
+                                <option value="Hindu">Hindu</option>
+                                <option value="Buddha">Buddha</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Alamat Lengkap</label>
+                            <textarea class="form-control" rows="2" placeholder="Jalan, RT/RW, Kelurahan..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>No. Telepon Siswa</label>
+                            <input type="text" class="form-control" placeholder="0812xxxx">
+                        </div>
+                        <div class="form-group">
+                            <label>Email Siswa</label>
+                            <input type="email" class="form-control" placeholder="email@sekolah.sch.id">
+                        </div>
+                    </div>
+
+                    <div class="form-section-title"><i class="fas fa-graduation-cap"></i> Data Akademik</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Tahun Ajaran</label>
+                            <select class="form-control">
+                                <option>2023/2024</option>
+                                <option>2024/2025</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kelas</label>
+                            <select class="form-control">
+                                <option value="10">Kelas X</option>
+                                <option value="11">Kelas XI</option>
+                                <option value="12">Kelas XII</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jurusan</label>
+                            <select class="form-control">
                                 <option value="IPA">IPA</option>
                                 <option value="IPS">IPS</option>
                                 <option value="Bahasa">Bahasa</option>
                             </select>
                         </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
-                            <label for="telepon">Nomor Telepon</label>
-                            <input type="tel" id="telepon" placeholder="0812-3456-7890">
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" placeholder="email@example.com">
+                            <label>Status</label>
+                            <select class="form-control">
+                                <option value="Aktif">Aktif</option>
+                                <option value="Nonaktif">Nonaktif</option>
+                            </select>
                         </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="alamat">Alamat</label>
-                        <textarea id="alamat" rows="3" placeholder="Alamat lengkap"></textarea>
+
+                    <div class="form-section-title"><i class="fas fa-users"></i> Data Orang Tua / Wali</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Nama Ayah</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>No. HP Ayah</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Ibu</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>No. HP Ibu</label>
+                            <input type="text" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Pekerjaan Ayah</label>
+                            <input type="text" class="form-control">
+                        </div>
+                         <div class="form-group">
+                            <label>Pekerjaan Ibu</label>
+                            <input type="text" class="form-control">
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status">
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Nonaktif</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                        <button type="button" class="btn btn-outline" id="cancelModal">Batal</button>
+
+                    <div style="margin-top: 30px; display: flex; gap: 10px;">
+                        <button type="submit" class="btn-add-new" style="flex: 2; justify-content: center;">Simpan Data Siswa</button>
+                        <button type="button" class="btn-add-new" style="flex: 1; background: #94a3b8; justify-content: center;" onclick="closeModal('siswaModal')">Batal</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal Reset Password -->
-    <div class="modal" id="resetPasswordModal">
+    <div class="modal-overlay" id="detailModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Reset Password Siswa</h3>
-                <button class="close-modal" id="closeResetModal">&times;</button>
+                <h3>Detail Siswa</h3>
+                <button class="close-modal" onclick="closeModal('detailModal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="student-info">
-                    <p><strong>NIS:</strong> <span id="resetNIS">-</span></p>
-                    <p><strong>Nama:</strong> <span id="resetNama">-</span></p>
-                </div>
-                <div class="form-group">
-                    <label for="newPassword">Password Baru</label>
-                    <input type="password" id="newPassword" placeholder="Masukkan password baru">
-                    <small>Minimum 8 karakter</small>
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword">Konfirmasi Password</label>
-                    <input type="password" id="confirmPassword" placeholder="Konfirmasi password baru">
-                </div>
-                <div class="form-group">
-                    <button class="btn btn-primary" id="generatePassword">Generate Password</button>
-                    <small>Password yang digenerate: <code id="generatedPassword">siswa123</code></small>
-                </div>
-                <div class="form-actions">
-                    <button class="btn btn-primary" id="savePassword">Reset Password</button>
-                    <button class="btn btn-outline" id="cancelReset">Batal</button>
+                <div id="detailContent">
+                    <div style="text-align:center; margin-bottom: 20px;">
+                        <div style="width: 80px; height: 80px; background: #eef2ff; color: #4a6cf7; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin: 0 auto 10px; font-weight:bold;">AF</div>
+                        <h2 style="margin: 0; color: #1e293b;" id="dNama">Ahmad Fauzi</h2>
+                        <p style="margin: 5px 0; color: #64748b;" id="dKelas">XII IPA 2</p>
+                    </div>
+
+                    <div class="form-section-title">Informasi Pribadi</div>
+                    <div class="detail-row"><div class="detail-label">NIS / NISN</div><div class="detail-value" id="dNis">-</div></div>
+                    <div class="detail-row"><div class="detail-label">TTL</div><div class="detail-value" id="dTtl">-</div></div>
+                    <div class="detail-row"><div class="detail-label">Jenis Kelamin</div><div class="detail-value" id="dJk">-</div></div>
+                    <div class="detail-row"><div class="detail-label">Agama</div><div class="detail-value" id="dAgama">-</div></div>
+                    <div class="detail-row"><div class="detail-label">Alamat</div><div class="detail-value" id="dAlamat">-</div></div>
+                    <div class="detail-row"><div class="detail-label">No. Telepon</div><div class="detail-value" id="dTelp">-</div></div>
+
+                    <div class="form-section-title">Orang Tua</div>
+                    <div class="detail-row"><div class="detail-label">Nama Ayah</div><div class="detail-value" id="dAyah">-</div></div>
+                    <div class="detail-row"><div class="detail-label">Pekerjaan Ayah</div><div class="detail-value" id="dJobAyah">-</div></div>
+                    <div class="detail-row"><div class="detail-label">Nama Ibu</div><div class="detail-value" id="dIbu">-</div></div>
+                    <div class="detail-row"><div class="detail-label">No. HP Orang Tua</div><div class="detail-value" id="dHpOrtu">-</div></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Pay<span>Edu</span> Admin</h3>
-                    <p>Sistem administrasi pembayaran sekolah yang terintegrasi.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Menu Admin</h4>
-                    <ul class="footer-links">
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="siswa.html">Data Siswa</a></li>
-                        <li><a href="tagihan.html">Tagihan</a></li>
-                        <li><a href="laporan.html">Laporan</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Kontak Teknis</h4>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-phone"></i> (021) 1234-5678 ext. 2</li>
-                        <li><i class="fas fa-envelope"></i> admin@payedu.sch.id</li>
-                        <li><i class="fas fa-headset"></i> Support: 08:00 - 17:00</li>
-                    </ul>
-                </div>
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-content" style="max-width: 400px; text-align: center; height: auto;">
+            <div class="modal-header" style="justify-content: center; border:none;">
+                <h3>Reset Password</h3>
             </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Hak akses terbatas untuk admin.</p>
+            <div style="padding: 0 30px 30px;">
+                <p style="color: #64748b; margin-bottom: 20px;">
+                    Reset password untuk <strong id="resetTargetName">Nama Siswa</strong>?<br>
+                    Password default: <code>siswa123</code>
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-add-new" style="flex: 1; justify-content: center;" onclick="confirmReset()">Reset</button>
+                    <button class="btn-add-new" style="flex: 1; background: #fff; border: 1px solid #ef4444; color: #ef4444; justify-content: center;" onclick="closeModal('resetModal')">Batal</button>
+                </div>
             </div>
         </div>
-    </footer>
+    </div>
 
-    <script src="../../assets/js/main.js"></script>
-    <script src="../../assets/js/admin-siswa.js"></script>
+    <script>
+        // 1. DUMMY DATA LENGKAP
+        const dummyData = [
+            { 
+                nis: '2023001', nisn: '0041234567', nama: 'Ahmad Fauzi', jk: 'L', 
+                kelas: '12', jurusan: 'IPA 2', telp: '081234567890', alamat: 'Jl. Merdeka No. 123, Jakarta',
+                ttl: 'Jakarta, 15 Agustus 2006', agama: 'Islam',
+                ayah: 'Drs. Bambang Sudiro', jobAyah: 'PNS', ibu: 'Siti Aisyah', hpOrtu: '0813-1234-5678'
+            },
+            { 
+                nis: '2023002', nisn: '0049876543', nama: 'Budi Santoso', jk: 'L', 
+                kelas: '11', jurusan: 'IPS 1', telp: '0857123123', alamat: 'Jl. Sudirman No. 45',
+                ttl: 'Bandung, 20 Mei 2007', agama: 'Kristen',
+                ayah: 'Joko Susilo', jobAyah: 'Wiraswasta', ibu: 'Maria', hpOrtu: '0812-9988-7766'
+            },
+            { 
+                nis: '2023003', nisn: '0055554444', nama: 'Citra Kirana', jk: 'P', 
+                kelas: '10', jurusan: 'Bahasa', telp: '089644556677', alamat: 'Jl. Melati Indah',
+                ttl: 'Surabaya, 10 Januari 2008', agama: 'Islam',
+                ayah: 'Rahmat Hidayat', jobAyah: 'Karyawan Swasta', ibu: 'Dewi', hpOrtu: '0811-2233-4455'
+            },
+        ];
+
+        // 2. RENDER TABLE
+        const tableBody = document.getElementById('tableBody');
+        const searchInput = document.getElementById('searchInput');
+        const filterKelas = document.getElementById('filterKelas');
+
+        function renderTable() {
+            tableBody.innerHTML = '';
+            const search = searchInput.value.toLowerCase();
+            const fKelas = filterKelas.value;
+
+            const filteredData = dummyData.filter(item => {
+                const matchSearch = item.nama.toLowerCase().includes(search) || item.nis.includes(search) || item.nisn.includes(search);
+                const matchKelas = fKelas === '' || item.kelas === fKelas;
+                return matchSearch && matchKelas;
+            });
+
+            if(filteredData.length > 0){
+                filteredData.forEach((item, index) => {
+                    const inisial = item.nama.match(/\b(\w)/g).join('').substring(0,2).toUpperCase();
+                    
+                    const row = `
+                        <tr>
+                            <td>
+                                <strong>${item.nis}</strong><br>
+                                <small style="color:#64748b">${item.nisn}</small>
+                            </td>
+                            <td>
+                                <div class="user-cell">
+                                    <div class="user-avatar">${inisial}</div>
+                                    <div style="display:flex; flex-direction:column;">
+                                        <span style="font-weight:500">${item.nama}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>${item.jk}</td>
+                            <td><span class="badge active-st">${item.kelas} ${item.jurusan}</span></td>
+                            <td>${item.telp}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action view" title="Lihat Detail" onclick="openDetail(${index})"><i class="fas fa-eye"></i></button>
+                                    
+                                    <button class="btn-action edit" title="Edit" onclick="openModal('edit', '${item.nama}')"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn-action password" title="Reset Password" onclick="openResetModal('${item.nama}')"><i class="fas fa-key"></i></button>
+                                    <button class="btn-action delete" title="Hapus" onclick="deleteItem(this)"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px; color:#64748b;">Data tidak ditemukan</td></tr>`;
+            }
+        }
+
+        searchInput.addEventListener('keyup', renderTable);
+        filterKelas.addEventListener('change', renderTable);
+        renderTable();
+
+        // 3. MODAL LOGIC
+        function openModal(mode, nama='') {
+            const modal = document.getElementById('siswaModal');
+            document.getElementById('modalTitle').innerText = mode === 'edit' ? 'Edit Data Siswa' : 'Tambah Siswa Baru';
+            if(mode === 'add') document.getElementById('siswaForm').reset();
+            modal.classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        // FUNGSI LIHAT DETAIL (Populate Data ke Modal Read-Only)
+        function openDetail(index) {
+            const data = dummyData[index];
+            
+            // Isi data ke modal
+            document.getElementById('dNama').innerText = data.nama;
+            document.getElementById('dKelas').innerText = `Kelas ${data.kelas} - ${data.jurusan}`;
+            document.getElementById('dNis').innerText = `${data.nis} / ${data.nisn}`;
+            document.getElementById('dTtl').innerText = data.ttl;
+            document.getElementById('dJk').innerText = data.jk === 'L' ? 'Laki-laki' : 'Perempuan';
+            document.getElementById('dAgama').innerText = data.agama;
+            document.getElementById('dAlamat').innerText = data.alamat;
+            document.getElementById('dTelp').innerText = data.telp;
+            
+            document.getElementById('dAyah').innerText = data.ayah;
+            document.getElementById('dJobAyah').innerText = data.jobAyah;
+            document.getElementById('dIbu').innerText = data.ibu;
+            document.getElementById('dHpOrtu').innerText = data.hpOrtu;
+
+            document.getElementById('detailModal').classList.add('active');
+        }
+
+        // Reset Password Logic
+        function openResetModal(nama) {
+            document.getElementById('resetTargetName').innerText = nama;
+            document.getElementById('resetModal').classList.add('active');
+        }
+        function confirmReset() {
+            alert('Password berhasil direset!');
+            closeModal('resetModal');
+        }
+
+        function deleteItem(btn) {
+            if(confirm('Yakin ingin menghapus data ini?')) btn.closest('tr').remove();
+        }
+
+        // Mobile Sidebar
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            const closeSidebar = document.getElementById('closeSidebar');
+
+            function toggle() {
+                mobileSidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+            if(hamburger) hamburger.addEventListener('click', toggle);
+            if(closeSidebar) closeSidebar.addEventListener('click', toggle);
+            if(overlay) overlay.addEventListener('click', toggle);
+        });
+    </script>
 </body>
 </html>

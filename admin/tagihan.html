@@ -7,394 +7,425 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/css/style.css">
+
+    <style>
+        /* --- CSS KHUSUS HALAMAN TAGIHAN (KONSISTEN) --- */
+        body { padding-bottom: 50px; 
+        overflow-y: scroll;}
+
+        /* 1. Tab Navigation (Pill Style) */
+        .tab-navigation {
+            display: flex; gap: 10px; margin-bottom: 20px;
+            background: #f1f5f9; padding: 5px; border-radius: 12px;
+            width: fit-content;
+        }
+        .tab-btn {
+            padding: 10px 25px; border: none; background: transparent;
+            color: #64748b; font-weight: 500; cursor: pointer;
+            border-radius: 10px; transition: 0.3s; font-family: 'Poppins', sans-serif;
+        }
+        .tab-btn.active { background: white; color: #4a6cf7; box-shadow: 0 2px 10px rgba(0,0,0,0.05); font-weight: 600; }
+
+        /* 2. Toolbar & Filter (Sama seperti halaman Siswa) */
+        .toolbar-card {
+            background: white; padding: 20px; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-bottom: 20px;
+            display: flex; gap: 15px; align-items: center; flex-wrap: wrap;
+        }
+        .search-group { flex: 2; position: relative; min-width: 200px; }
+        .search-group input {
+            width: 100%; padding: 12px 15px 12px 45px; border: 1px solid #e2e8f0;
+            border-radius: 10px; font-size: 14px; background: #f8fafc; transition: 0.3s;
+        }
+        .search-group input:focus { background: white; border-color: #4a6cf7; outline: none; }
+        .search-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+        
+        .filter-group { flex: 1; min-width: 150px; }
+        .filter-group select {
+            width: 100%; padding: 12px 15px; border: 1px solid #e2e8f0;
+            border-radius: 10px; background: white; color: #64748b; cursor: pointer; outline: none;
+        }
+        
+        .btn-add-new {
+            background: #4a6cf7; color: white; padding: 12px 25px; border-radius: 10px;
+            font-weight: 500; border: none; cursor: pointer; display: flex; align-items: center; gap: 8px;
+            white-space: nowrap; transition: 0.2s;
+        }
+        .btn-add-new:hover { background: #3758f9; }
+
+        /* 3. Tabel Styling */
+        .card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .table-responsive { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; white-space: nowrap; }
+        th { text-align: left; padding: 15px; font-size: 13px; color: #64748b; border-bottom: 2px solid #f1f5f9; background: #f8fafc; }
+        td { padding: 15px; font-size: 14px; border-bottom: 1px solid #f1f5f9; color: #1e293b; vertical-align: middle; }
+        
+        /* Badges */
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .badge.lunas { background: #ecfdf5; color: #059669; }
+        .badge.belum { background: #fef2f2; color: #ef4444; }
+        .badge.pending { background: #fff7ed; color: #ea580c; }
+        .badge.jenis { background: #eef2ff; color: #4a6cf7; }
+
+        /* Action Buttons */
+        .action-buttons { display: flex; gap: 8px; }
+        .btn-action { width: 32px; height: 32px; border-radius: 6px; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; font-size: 12px; }
+        .btn-action.edit { background: #f0f9ff; color: #0ea5e9; }
+        .btn-action.delete { background: #fef2f2; color: #ef4444; }
+
+        /* 4. Modal Styling */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 1000; display: none; justify-content: center; align-items: flex-start;
+            padding-top: 50px; opacity: 0; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { display: flex; opacity: 1; }
+        .modal-content { background: white; width: 600px; max-width: 95%; border-radius: 16px; padding: 30px; position: relative; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group label { display: block; margin-bottom: 8px; font-size: 13px; color: #64748b; font-weight: 500; }
+        .form-control { width: 100%; padding: 10px 15px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
+        
+        /* Tab Content Visibility */
+        .tab-content { display: none; animation: fadeIn 0.3s; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Jenis Tagihan Card (Tab 2) */
+        .jenis-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
+        .jenis-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; position: relative; transition: 0.3s; }
+        .jenis-card:hover { border-color: #4a6cf7; box-shadow: 0 4px 15px rgba(74, 108, 247, 0.08); }
+        .jenis-icon { width: 40px; height: 40px; background: #eef2ff; color: #4a6cf7; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 15px; }
+    </style>
 </head>
 <body class="logged-in admin">
-    <!-- Header -->
+    
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="../../index.html" class="logo">
+                <a href="dashboard.html" class="logo">
                     <i class="fas fa-graduation-cap"></i>
-                                        <h1>Admin</h1>
-
+                    <h1>Admin</h1>
                 </a>
-
-                <!-- Navigation for admin -->
                 <nav class="nav-desktop">
                     <ul>
                         <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                         <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
                         <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
+                        <li><a href="verifikasi.html"><i class="fas fa-check-circle"></i> Verifikasi</a></li>
                         <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
                         <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
                     </ul>
                 </nav>
-
-                <!-- User menu -->
-                <div class="user-menu">
-                    <div class="user-info">
-                        <i class="fas fa-user-tie"></i>
-                        <span id="usernameDisplay">Administrator</span>
-                    </div>
-                    <button class="btn btn-outline" id="logoutBtn">Keluar</button>
-                </div>
-
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="user-menu" style="display: flex; gap: 10px; align-items: center;">
+                    <a href="../../index.html" class="btn btn-outline" style="padding: 8px 20px; display: none;">Keluar</a>
+                    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
                 </div>
             </div>
         </div>
+        <style> @media(min-width: 769px) { .user-menu .btn-outline { display: block !important; } } </style>
     </header>
 
-    <!-- Mobile Sidebar -->
     <div class="mobile-sidebar" id="mobileSidebar">
         <div class="mobile-sidebar-header">
             <h3>Menu Admin</h3>
-            <button class="close-sidebar" id="closeSidebar">
-                <i class="fas fa-times"></i>
-            </button>
+            <button class="close-sidebar" id="closeSidebar"><i class="fas fa-times"></i></button>
         </div>
         <ul class="sidebar-menu">
-            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="siswa.html"><i class="fas fa-users"></i> Data Siswa</a></li>
-            <li><a href="tagihan.html" class="active"><i class="fas fa-file-invoice-dollar"></i> Tagihan</a></li>
-            <li><a href="pembayaran.html"><i class="fas fa-money-check-alt"></i> Pembayaran</a></li>
-            <li><a href="laporan.html"><i class="fas fa-chart-bar"></i> Laporan</a></li>
-            <li><a href="#" id="logoutMobileBtn"><i class="fas fa-sign-out-alt"></i> Keluar</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="siswa.html">Data Siswa</a></li>
+            <li><a href="tagihan.html" class="active">Tagihan</a></li>
+            <li><a href="verifikasi.html">Verifikasi</a></li>
+            <li><a href="pembayaran.html">Pembayaran</a></li>
+            <li><a href="laporan.html">Laporan</a></li>
+            <li><a href="../../index.html" style="color: #ef4444;">Keluar</a></li>
         </ul>
     </div>
     <div class="overlay" id="overlay"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
         <div class="container">
-            <div class="page-header">
-                <h2>Manajemen Tagihan</h2>
-                <p>Buat, edit, dan kelola tagihan siswa</p>
+            <div class="page-header" style="margin-bottom: 20px;">
+                <h2 style="color: #1e293b; font-weight: 700;">Manajemen Tagihan</h2>
+                <p style="color: #64748b;">Buat tagihan baru, kelola jenis pembayaran, dan pantau status.</p>
             </div>
 
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab-btn active" data-tab="tagihan">Tagihan</button>
-                <button class="tab-btn" data-tab="jenis">Jenis Pembayaran</button>
-                <button class="tab-btn" data-tab="template">Template Tagihan</button>
+            <div class="tab-navigation">
+                <button class="tab-btn active" onclick="switchTab('daftarTagihan')">Daftar Tagihan</button>
+                <button class="tab-btn" onclick="switchTab('jenisTagihan')">Master Jenis Pembayaran</button>
             </div>
 
-            <!-- Tab Content: Tagihan -->
-            <div class="tab-content active" id="tagihanTab">
-                <!-- Toolbar -->
-                <div class="card mb-20">
-                    <div class="toolbar">
-                        <div class="search-box">
-                            <input type="text" id="searchBills" placeholder="Cari tagihan...">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <div class="toolbar-actions">
-                            <button class="btn btn-primary" id="createBillBtn">
-                                <i class="fas fa-plus-circle"></i> Buat Tagihan
-                            </button>
-                            <button class="btn btn-success" id="exportBills">
-                                <i class="fas fa-file-excel"></i> Export
-                            </button>
-                        </div>
+            <div id="daftarTagihan" class="tab-content active">
+                <div class="toolbar-card">
+                    <div class="search-group">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Cari Kode Tagihan, NIS, atau Nama...">
                     </div>
-                    
-                    <!-- Filter -->
-                    <div class="filter-section">
-                        <div class="filter-controls">
-                            <div class="form-group">
-                                <label for="filterJenis">Jenis Tagihan</label>
-                                <select id="filterJenis">
-                                    <option value="">Semua Jenis</option>
-                                    <option value="SPP">SPP</option>
-                                    <option value="Uang Gedung">Uang Gedung</option>
-                                    <option value="Praktikum">Praktikum</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="filterBulan">Bulan</label>
-                                <select id="filterBulan">
-                                    <option value="">Semua Bulan</option>
-                                    <option value="1">Januari</option>
-                                    <option value="2">Februari</option>
-                                    <option value="3">Maret</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="filterStatus">Status</label>
-                                <select id="filterStatus">
-                                    <option value="">Semua Status</option>
-                                    <option value="aktif">Aktif</option>
-                                    <option value="nonaktif">Nonaktif</option>
-                                </select>
-                            </div>
-                            <button class="btn btn-outline" id="applyBillFilter">Terapkan</button>
-                        </div>
+                    <div class="filter-group">
+                        <select id="filterJenis">
+                            <option value="">Semua Jenis</option>
+                            <option value="SPP">SPP Bulanan</option>
+                            <option value="Gedung">Uang Gedung</option>
+                            <option value="Seragam">Seragam</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <select id="filterStatus">
+                            <option value="">Semua Status</option>
+                            <option value="Belum Lunas">Belum Lunas</option>
+                            <option value="Lunas">Lunas</option>
+                        </select>
+                    </div>
+                    <div class="action-group">
+                        <button class="btn-add-new" onclick="openModal('addBill')">
+                            <i class="fas fa-plus-circle"></i> Buat Tagihan
+                        </button>
                     </div>
                 </div>
 
-                <!-- Bills Table -->
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Daftar Tagihan</h3>
-                        <div class="table-summary">
-                            <span>Total: <strong>8,500</strong> tagihan</span>
-                            <span>Lunas: <strong class="text-success">7,200</strong></span>
-                            <span>Belum: <strong class="text-danger">1,300</strong></span>
-                        </div>
-                    </div>
-                    
                     <div class="table-responsive">
-                        <table>
+                        <table id="billTable">
                             <thead>
                                 <tr>
-                                    <th>No</th>
                                     <th>Kode Tagihan</th>
-                                    <th>Jenis</th>
-                                    <th>Periode</th>
-                                    <th>Jumlah</th>
-                                    <th>Jatuh Tempo</th>
+                                    <th>Siswa</th>
+                                    <th>Jenis Tagihan</th>
+                                    <th>Nominal</th>
+                                    <th>Tenggat</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody id="billsTable">
-                                <!-- Data diisi oleh JavaScript -->
-                            </tbody>
+                            <tbody id="billTableBody">
+                                </tbody>
                         </table>
                     </div>
-                    
-                    <!-- Pagination -->
                     <div class="pagination">
-                        <button class="btn btn-outline" id="prevPage">Sebelumnya</button>
-                        <span class="page-info">Halaman 1 dari 170</span>
-                        <button class="btn btn-outline" id="nextPage">Selanjutnya</button>
+                        <button class="btn-page"><i class="fas fa-chevron-left"></i></button>
+                        <span class="page-info">Halaman 1 dari 10</span>
+                        <button class="btn-page"><i class="fas fa-chevron-right"></i></button>
                     </div>
                 </div>
             </div>
 
-            <!-- Tab Content: Jenis Pembayaran -->
-            <div class="tab-content" id="jenisTab">
+            <div id="jenisTagihan" class="tab-content">
                 <div class="card">
-                    <div class="card-header">
-                        <h3>Jenis Pembayaran</h3>
-                        <button class="btn btn-primary" id="addPaymentType">
-                            <i class="fas fa-plus"></i> Tambah Jenis
-                        </button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3 style="margin:0;">Master Jenis Pembayaran</h3>
+                        <button class="btn-add-new" onclick="alert('Fitur tambah jenis')"><i class="fas fa-plus"></i> Tambah Jenis</button>
                     </div>
                     
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Kode</th>
-                                    <th>Nama Pembayaran</th>
-                                    <th>Jumlah</th>
-                                    <th>Kelas</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>SPP</td>
-                                    <td>SPP Bulanan</td>
-                                    <td>Rp 350.000</td>
-                                    <td>Semua Kelas</td>
-                                    <td><span class="status success">Aktif</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline">Edit</button>
-                                        <button class="btn btn-sm btn-danger">Nonaktifkan</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>UG</td>
-                                    <td>Uang Gedung</td>
-                                    <td>Rp 500.000</td>
-                                    <td>Kelas X</td>
-                                    <td><span class="status success">Aktif</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline">Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tab Content: Template -->
-            <div class="tab-content" id="templateTab">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Template Tagihan</h3>
-                        <button class="btn btn-primary" id="addTemplate">
-                            <i class="fas fa-plus"></i> Buat Template
-                        </button>
-                    </div>
-                    
-                    <div class="templates-grid">
-                        <div class="template-card">
+                    <div class="jenis-grid">
+                        <div class="jenis-card">
+                            <div class="jenis-icon"><i class="fas fa-book"></i></div>
                             <h4>SPP Bulanan</h4>
-                            <p>Tagihan SPP rutin setiap bulan</p>
-                            <div class="template-info">
-                                <span><i class="fas fa-money-bill-wave"></i> Rp 350.000</span>
-                                <span><i class="fas fa-calendar"></i> Setiap bulan</span>
-                            </div>
-                            <div class="template-actions">
-                                <button class="btn btn-sm btn-primary">Gunakan</button>
-                                <button class="btn btn-sm btn-outline">Edit</button>
+                            <p style="color:#64748b; font-size:13px; margin:5px 0 15px;">Pembayaran rutin setiap bulan.</p>
+                            <h3 style="color:#4a6cf7;">Rp 350.000</h3>
+                            <div style="margin-top:15px; display:flex; gap:10px;">
+                                <button class="btn-action edit" style="width:100%">Edit</button>
                             </div>
                         </div>
-                        
-                        <div class="template-card">
-                            <h4>Uang Praktikum</h4>
-                            <p>Biaya praktikum semester ganjil</p>
-                            <div class="template-info">
-                                <span><i class="fas fa-money-bill-wave"></i> Rp 150.000</span>
-                                <span><i class="fas fa-calendar"></i> Semester</span>
+                        <div class="jenis-card">
+                            <div class="jenis-icon"><i class="fas fa-building"></i></div>
+                            <h4>Uang Gedung</h4>
+                            <p style="color:#64748b; font-size:13px; margin:5px 0 15px;">Dibayarkan sekali saat masuk.</p>
+                            <h3 style="color:#4a6cf7;">Rp 2.500.000</h3>
+                            <div style="margin-top:15px; display:flex; gap:10px;">
+                                <button class="btn-action edit" style="width:100%">Edit</button>
                             </div>
-                            <div class="template-actions">
-                                <button class="btn btn-sm btn-primary">Gunakan</button>
-                                <button class="btn btn-sm btn-outline">Edit</button>
+                        </div>
+                        <div class="jenis-card">
+                            <div class="jenis-icon"><i class="fas fa-tshirt"></i></div>
+                            <h4>Seragam</h4>
+                            <p style="color:#64748b; font-size:13px; margin:5px 0 15px;">Paket seragam lengkap.</p>
+                            <h3 style="color:#4a6cf7;">Rp 850.000</h3>
+                            <div style="margin-top:15px; display:flex; gap:10px;">
+                                <button class="btn-action edit" style="width:100%">Edit</button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </main>
 
-    <!-- Modal Buat Tagihan -->
-    <div class="modal" id="billModal">
-        <div class="modal-content large">
+    <div class="modal-overlay" id="billModal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3>Buat Tagihan Baru</h3>
-                <button class="close-modal" id="closeBillModal">&times;</button>
+                <button class="close-modal" onclick="closeModal('billModal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <form id="billForm">
-                    <!-- Step 1: Pilih Jenis -->
-                    <div class="form-step active" data-step="1">
-                        <h4>Pilih Jenis Tagihan</h4>
-                        <div class="payment-types">
-                            <div class="payment-type active">
-                                <i class="fas fa-file-invoice"></i>
-                                <h5>SPP Bulanan</h5>
-                                <p>Rp 350.000</p>
-                            </div>
-                            <div class="payment-type">
-                                <i class="fas fa-university"></i>
-                                <h5>Uang Gedung</h5>
-                                <p>Rp 500.000</p>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-primary next-step" data-next="2">Lanjut</button>
+            <form id="createBillForm">
+                <div class="form-group">
+                    <label>Jenis Tagihan</label>
+                    <select class="form-control" id="modalJenisSelect">
+                        <option value="SPP">SPP Bulanan - Rp 350.000</option>
+                        <option value="Gedung">Uang Gedung - Rp 2.500.000</option>
+                        <option value="Seragam">Seragam - Rp 850.000</option>
+                        <option value="Custom">Lainnya (Custom)</option>
+                    </select>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Target Tagihan</label>
+                        <select class="form-control" id="targetSelect" onchange="toggleTarget()">
+                            <option value="Siswa">Per Siswa (Manual)</option>
+                            <option value="Kelas">Satu Kelas</option>
+                            <option value="Semua">Semua Siswa Aktif</option>
+                        </select>
                     </div>
-                    
-                    <!-- Step 2: Pilih Siswa -->
-                    <div class="form-step" data-step="2">
-                        <h4>Pilih Siswa</h4>
-                        <div class="selection-options">
-                            <label>
-                                <input type="radio" name="studentSelection" value="all" checked> Semua Siswa
-                            </label>
-                            <label>
-                                <input type="radio" name="studentSelection" value="class"> Per Kelas
-                            </label>
-                            <label>
-                                <input type="radio" name="studentSelection" value="individual"> Perorangan
-                            </label>
-                        </div>
-                        
-                        <div class="class-selection" id="classSelection">
-                            <select id="selectedClass">
-                                <option value="">Pilih Kelas</option>
-                                <option value="X">Kelas X</option>
-                                <option value="XI">Kelas XI</option>
-                            </select>
-                        </div>
-                        
-                        <button type="button" class="btn btn-outline prev-step" data-prev="1">Kembali</button>
-                        <button type="button" class="btn btn-primary next-step" data-next="3">Lanjut</button>
+                    <div class="form-group" id="inputSiswa">
+                        <label>Cari Siswa (NIS/Nama)</label>
+                        <input type="text" class="form-control" placeholder="Ketik nama siswa...">
                     </div>
-                    
-                    <!-- Step 3: Setting -->
-                    <div class="form-step" data-step="3">
-                        <h4>Setting Tagihan</h4>
-                        <div class="form-group">
-                            <label for="dueDate">Tanggal Jatuh Tempo</label>
-                            <input type="date" id="dueDate" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="periode">Periode Tagihan</label>
-                            <input type="month" id="periode" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="keterangan">Keterangan</label>
-                            <textarea id="keterangan" rows="2"></textarea>
-                        </div>
-                        
-                        <div class="summary">
-                            <h5>Ringkasan:</h5>
-                            <p>Jenis: <strong>SPP Bulanan</strong></p>
-                            <p>Jumlah: <strong>Rp 350.000</strong></p>
-                            <p>Jumlah Siswa: <strong>50 siswa</strong></p>
-                            <p>Total: <strong class="text-primary">Rp 17.500.000</strong></p>
-                        </div>
-                        
-                        <button type="button" class="btn btn-outline prev-step" data-prev="2">Kembali</button>
-                        <button type="submit" class="btn btn-primary">Buat Tagihan</button>
+                    <div class="form-group" id="inputKelas" style="display:none;">
+                        <label>Pilih Kelas</label>
+                        <select class="form-control">
+                            <option>Kelas X</option>
+                            <option>Kelas XI</option>
+                            <option>Kelas XII</option>
+                        </select>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Nominal (Rp)</label>
+                        <input type="number" class="form-control" value="350000">
+                    </div>
+                    <div class="form-group">
+                        <label>Tenggat Waktu</label>
+                        <input type="date" class="form-control">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Keterangan (Opsional)</label>
+                    <textarea class="form-control" rows="2" placeholder="Contoh: Pembayaran SPP Bulan Maret 2024"></textarea>
+                </div>
+
+                <button type="submit" class="btn-add-new" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    <i class="fas fa-paper-plane"></i> Kirim Tagihan
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">
-                    <h3>Pay<span>Edu</span> Admin</h3>
-                    <p>Sistem administrasi pembayaran sekolah yang terintegrasi.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Menu Admin</h4>
-                    <ul class="footer-links">
-                        <li><a href="dashboard.html">Dashboard</a></li>
-                        <li><a href="siswa.html">Data Siswa</a></li>
-                        <li><a href="tagihan.html">Tagihan</a></li>
-                        <li><a href="laporan.html">Laporan</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-section">
-                    <h4>Kontak Teknis</h4>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-phone"></i> (021) 1234-5678 ext. 2</li>
-                        <li><i class="fas fa-envelope"></i> admin@payedu.sch.id</li>
-                        <li><i class="fas fa-headset"></i> Support: 08:00 - 17:00</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2024 PayEdu - Sistem Pembayaran Siswa. Hak akses terbatas untuk admin.</p>
-            </div>
-        </div>
-    </footer>
+    <script>
+        // 1. DATA DUMMY TAGIHAN
+        const dummyBills = [
+            { kode: 'INV/2024/001', nis: '2023001', nama: 'Ahmad Fauzi', jenis: 'SPP', nominal: 350000, tenggat: '2024-03-10', status: 'Belum Lunas' },
+            { kode: 'INV/2024/002', nis: '2023002', nama: 'Budi Santoso', jenis: 'Gedung', nominal: 2500000, tenggat: '2024-01-20', status: 'Lunas' },
+            { kode: 'INV/2024/003', nis: '2023005', nama: 'Citra Kirana', jenis: 'SPP', nominal: 350000, tenggat: '2024-03-10', status: 'Belum Lunas' },
+            { kode: 'INV/2024/004', nis: '2023001', nama: 'Ahmad Fauzi', jenis: 'Seragam', nominal: 850000, tenggat: '2024-02-15', status: 'Lunas' },
+            { kode: 'INV/2024/005', nis: '2023010', nama: 'Dewi Lestari', jenis: 'SPP', nominal: 350000, tenggat: '2024-03-10', status: 'Belum Lunas' },
+        ];
 
-    <script src="../../assets/js/main.js"></script>
-    <script src="../../assets/js/admin-tagihan.js"></script>
+        // 2. RENDER TABLE
+        const tableBody = document.getElementById('billTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const filterJenis = document.getElementById('filterJenis');
+        const filterStatus = document.getElementById('filterStatus');
+
+        function renderBills() {
+            tableBody.innerHTML = '';
+            const search = searchInput.value.toLowerCase();
+            const fJenis = filterJenis.value;
+            const fStatus = filterStatus.value;
+
+            const filtered = dummyBills.filter(item => {
+                const matchSearch = item.nama.toLowerCase().includes(search) || item.kode.toLowerCase().includes(search) || item.nis.includes(search);
+                const matchJenis = fJenis === '' || item.jenis === fJenis;
+                const matchStatus = fStatus === '' || item.status === fStatus;
+                return matchSearch && matchJenis && matchStatus;
+            });
+
+            if(filtered.length > 0) {
+                filtered.forEach(item => {
+                    const statusBadge = item.status === 'Lunas' ? 'lunas' : 'belum';
+                    const row = `
+                        <tr>
+                            <td><strong style="color:#4a6cf7">${item.kode}</strong></td>
+                            <td>
+                                <div>${item.nama}</div>
+                                <small style="color:#94a3b8">${item.nis}</small>
+                            </td>
+                            <td><span class="badge jenis">${item.jenis}</span></td>
+                            <td>Rp ${item.nominal.toLocaleString('id-ID')}</td>
+                            <td>${item.tenggat}</td>
+                            <td><span class="badge ${statusBadge}">${item.status}</span></td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="btn-action edit" title="Edit"><i class="fas fa-pencil-alt"></i></button>
+                                    <button class="btn-action delete" title="Hapus"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color:#64748b;">Data tagihan tidak ditemukan</td></tr>`;
+            }
+        }
+
+        // Event Listeners
+        searchInput.addEventListener('keyup', renderBills);
+        filterJenis.addEventListener('change', renderBills);
+        filterStatus.addEventListener('change', renderBills);
+        renderBills(); // Initial Render
+
+        // 3. TAB SWITCHING LOGIC
+        function switchTab(tabId) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            // Show selected
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // 4. MODAL LOGIC
+        function openModal(id) {
+            document.getElementById('billModal').classList.add('active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+        
+        // Toggle input based on target
+        function toggleTarget() {
+            const val = document.getElementById('targetSelect').value;
+            const inputSiswa = document.getElementById('inputSiswa');
+            const inputKelas = document.getElementById('inputKelas');
+            
+            if(val === 'Siswa') {
+                inputSiswa.style.display = 'block';
+                inputKelas.style.display = 'none';
+            } else if (val === 'Kelas') {
+                inputSiswa.style.display = 'none';
+                inputKelas.style.display = 'block';
+            } else {
+                inputSiswa.style.display = 'none';
+                inputKelas.style.display = 'none';
+            }
+        }
+
+        // Sidebar Mobile
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburger = document.getElementById('hamburger');
+            const mobileSidebar = document.getElementById('mobileSidebar');
+            const overlay = document.getElementById('overlay');
+            const closeSidebar = document.getElementById('closeSidebar');
+            function toggle() { mobileSidebar.classList.toggle('active'); overlay.classList.toggle('active'); }
+            if(hamburger) hamburger.addEventListener('click', toggle);
+            if(closeSidebar) closeSidebar.addEventListener('click', toggle);
+            if(overlay) overlay.addEventListener('click', toggle);
+        });
+    </script>
 </body>
 </html>
